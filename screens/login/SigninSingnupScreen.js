@@ -45,7 +45,7 @@ function Signup(props) {
 
 function Signin(props) {
     const dispatch = useDispatch();
-    const {loading} = useSelector(state => state.user);
+    const {loading} = useSelector(state => state.global);
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
           email: '',
