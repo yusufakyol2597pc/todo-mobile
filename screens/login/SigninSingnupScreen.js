@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "../../components/Themed";
-import { Button, StyleSheet, TextInput, Pressable, ActivityIndicator, TouchableOpacity } from "react-native";
+import { Button, StyleSheet, TextInput, Pressable, ActivityIndicator, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { Link } from '@react-navigation/native';
 import { Controller, useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ function Signup(props) {
         dispatch(register(data))
     };   
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="height">
             <Text style={styles.title}>Sign up</Text>
             <Text style={styles.title1}>
                 <Text>Already have an account?</Text>
@@ -39,7 +39,7 @@ function Signup(props) {
             <Pressable style={styles.button} onPress={handleSubmit(onSubmit)}>
                 <Text style={{color: "white", fontSize: 18}}>Create Account</Text>
             </Pressable>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -57,14 +57,14 @@ function Signin(props) {
         dispatch(login(data.email, data.password))
     };  
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="height">
             <Text style={styles.title}>Sign in</Text>
             <Text style={styles.title1}>
                 <Text>Does not have an account?</Text>
                 <Text style={{fontWeight: "bold"}} onPress={props.setHaveAccount}> Sign up</Text>
             </Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
+            
             <CustomizedInput name="email" placeholder="Email" control={control} errors={errors} icon="mail"/>
             <CustomizedInput name="password" placeholder="Password" control={control} errors={errors} icon="key"/>
 
@@ -72,7 +72,7 @@ function Signin(props) {
                 <Text style={{color: "white", fontSize: 18}}>Sign in</Text>
             </TouchableOpacity>
             {loading ? <ActivityIndicator/> : null}
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
