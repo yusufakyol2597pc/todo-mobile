@@ -33,8 +33,8 @@ function Signup(props) {
 
             <CustomizedInput name="username" placeholder="Username" control={control} errors={errors} icon="person-circle"/>
             <CustomizedInput name="email" placeholder="Email" control={control} errors={errors} icon="mail"/>
-            <CustomizedInput name="password" placeholder="Password" control={control} errors={errors} icon="key"/>
-            <CustomizedInput name="password_confirm" placeholder="Confirm Password" control={control} errors={errors} icon="key"/>
+            <CustomizedInput name="password" placeholder="Password" secureTextEntry={true} control={control} errors={errors} icon="key"/>
+            <CustomizedInput name="password_confirm" placeholder="Confirm Password" secureTextEntry={true} control={control} errors={errors} icon="key"/>
 
             <Pressable style={styles.button} onPress={handleSubmit(onSubmit)}>
                 <Text style={{color: "white", fontSize: 18}}>Create Account</Text>
@@ -66,7 +66,7 @@ function Signin(props) {
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             
             <CustomizedInput name="email" placeholder="Email" control={control} errors={errors} icon="mail"/>
-            <CustomizedInput name="password" placeholder="Password" control={control} errors={errors} icon="key"/>
+            <CustomizedInput name="password" placeholder="Password" secureTextEntry={true} control={control} errors={errors} icon="key"/>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
                 <Text style={{color: "white", fontSize: 18}}>Sign in</Text>

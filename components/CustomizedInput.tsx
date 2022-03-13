@@ -19,6 +19,7 @@ export function CustomizedInput(props: any) {
                         onBlur={onBlur}
                         onChangeText={onChange}
                         placeholder={props.placeholder}
+                        secureTextEntry={props.secureTextEntry? true : false}
                     />
                 )}
                 name={props.name}
