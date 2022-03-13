@@ -23,7 +23,7 @@ function Signup(props) {
         dispatch(register(data))
     };   
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="height">
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
             <Text style={styles.title}>Sign up</Text>
             <Text style={styles.title1}>
                 <Text>Already have an account?</Text>
@@ -57,7 +57,7 @@ function Signin(props) {
         dispatch(login(data.email, data.password))
     };  
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="height">
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
             <Text style={styles.title}>Sign in</Text>
             <Text style={styles.title1}>
                 <Text>Does not have an account?</Text>
