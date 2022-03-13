@@ -19,6 +19,8 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import TodosSwiper from '../screens/todo/TodosSwiper';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -69,6 +71,26 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Todo List',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                signOut(auth).then(() => {
+                  // Sign-out successful.
+                }).catch((error) => {
+                  // An error happened.
+                });
+              }}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}>
+              <Ionicons
+                name="log-out-outline"
+                size={32}
+                color={Colors[colorScheme].text}
+                style={{ marginLeft: 15 }}
+              />
+            </Pressable>
+          ),
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
