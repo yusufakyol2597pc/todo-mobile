@@ -24,7 +24,6 @@ export function CustomizedInput(props: any) {
                 )}
                 name={props.name}
             />
-            {props.errors["" +props.name] && <Text>This is required.</Text>}
         </View>
     )
 }
@@ -37,7 +36,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "gray",
         borderRadius: 6,
-        marginBottom: 16
+        marginTop: 16
     },
     input: {
         marginLeft: 6,

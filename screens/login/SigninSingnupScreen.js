@@ -23,7 +23,7 @@ function Signup(props) {
         dispatch(register(data))
     };   
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={64}>
             <Text style={styles.title}>Sign up</Text>
             <Text style={styles.title1}>
                 <Text>Already have an account?</Text>
@@ -32,9 +32,16 @@ function Signup(props) {
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
 
             <CustomizedInput name="username" placeholder="Username" control={control} errors={errors} icon="person-circle"/>
+            {errors.username && <Text style={styles.errorText}>Username is required.</Text>}
+
             <CustomizedInput name="email" placeholder="Email" control={control} errors={errors} icon="mail"/>
+            {errors.email && <Text style={styles.errorText}>Email is required.</Text>}
+
             <CustomizedInput name="password" placeholder="Password" secureTextEntry={true} control={control} errors={errors} icon="key"/>
+            {errors.password && <Text style={styles.errorText}>Password is required.</Text>}
+            
             <CustomizedInput name="password_confirm" placeholder="Confirm Password" secureTextEntry={true} control={control} errors={errors} icon="key"/>
+            {errors.password_confirm && <Text style={styles.errorText}>Confirm the password.</Text>}
 
             <Pressable style={styles.button} onPress={handleSubmit(onSubmit)}>
                 <Text style={{color: "white", fontSize: 18}}>Create Account</Text>
@@ -52,7 +59,9 @@ function Signin(props) {
           password: '',
         }
     });
-    
+    useEffect(() => {
+        //console.log("email", errors.email);
+    }, [errors])
     const onSubmit = data => {
         dispatch(login(data.email, data.password))
     };  
@@ -65,8 +74,11 @@ function Signin(props) {
             </Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             
-            <CustomizedInput name="email" placeholder="Email" control={control} errors={errors} icon="mail"/>
-            <CustomizedInput name="password" placeholder="Password" secureTextEntry={true} control={control} errors={errors} icon="key"/>
+            <CustomizedInput name="email" placeholder="Email" control={control} icon="mail"/>
+            {errors.email && <Text style={styles.errorText}>Email is required.</Text>}
+
+            <CustomizedInput name="password" placeholder="Password" secureTextEntry={true} control={control} icon="key"/>
+            {errors.password && <Text style={styles.errorText}>Password is required.</Text>}
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
                 <Text style={{color: "white", fontSize: 18}}>Sign in</Text>
@@ -128,5 +140,12 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         elevation: 3,
         backgroundColor: '#398AB9',
+        marginTop: 16
+    },
+    errorText: {
+        textAlign: "left",
+        color: "red",
+        width: "100%",
+        marginTop: 4
     }
   });

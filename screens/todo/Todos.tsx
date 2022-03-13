@@ -69,7 +69,6 @@ export default function Todos(props: any) {
           todoList.push(doc);
       });
       setTodos(todoList);
-      console.log("Current cities in CA: ", todoList.join(", "));
   });
 
     return unsubscribe;
