@@ -83,7 +83,7 @@ export default function Todos(props: any) {
             )
           }) 
         }
-        <Text>{props.ind}</Text>
+        {todos.length === 0 ? <Text>No todos here! Creat a todo with add button.</Text> : null}
       </View>
   );
 }

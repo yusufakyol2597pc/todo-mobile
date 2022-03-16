@@ -6,7 +6,6 @@ import { Text, View } from "./Themed";
 export function CustomizedInput(props: any) {
     return (
         <View style={styles.inputContainer}>
-            {props.icon ? <Ionicons name={props.icon} size={32} color="gray" /> : null}
             <Controller
                 control={props.control}
                 rules={{
@@ -18,12 +17,12 @@ export function CustomizedInput(props: any) {
                         value={value}
                         onBlur={onBlur}
                         onChangeText={onChange}
-                        placeholder={props.placeholder}
                         secureTextEntry={props.secureTextEntry? true : false}
                     />
                 )}
                 name={props.name}
             />
+            {props.icon ? <Ionicons name={props.icon} size={24} color="gray" /> : null}
         </View>
     )
 }
@@ -31,12 +30,12 @@ export function CustomizedInput(props: any) {
 const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
-        padding: 8,
+        padding: 12,
         width: "100%",
         borderWidth: 1,
-        borderColor: "gray",
-        borderRadius: 6,
-        marginTop: 16
+        borderColor: "#DFD4C0",
+        borderRadius: 8,
+        backgroundColor: '#F0E7D6'
     },
     input: {
         marginLeft: 6,
