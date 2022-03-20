@@ -63,13 +63,23 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarStyle: {
+          backgroundColor: "#38383A",
+          height: "12%"
+        },
+        tabBarLabelStyle: {
+          color: "#FFFFFF",
+          fontFamily: 'pressura-mono'
+        },
+        tabBarItemStyle: {
+          padding: 10
+        }
       }}>
       <BottomTab.Screen
         name="TabOne"
         component={TodosSwiper}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Todo List',
+          title: 'To-do',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerLeft: () => (
             <Pressable
@@ -111,7 +121,21 @@ function BottomTabNavigator() {
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
+          title: 'Timer',
+          tabBarItemStyle: {
+            padding: 10,
+            borderRightWidth: 0.3,
+            borderLeftWidth: 0.3,
+            borderColor: "#505050"
+          },
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="TabThree"
+        component={TabTwoScreen}
+        options={{
+          title: 'Profile',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

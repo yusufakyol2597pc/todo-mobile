@@ -14,6 +14,7 @@ import { TodoStatus } from '../../store/enums/todoStatus';
 import { TodoType } from '../../store/enums/todoType';
 import { useForm } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { MonoText } from '../../components/StyledText';
 
 function TodoItem(props: any) {
   const dispatch = useDispatch();
@@ -38,7 +39,8 @@ function TodoItem(props: any) {
 
   return(
     <View style={styles.todoItemContainer}>
-      <Text style={{fontSize: 18}}>{props.todo.title}</Text>
+      <MonoText style={{fontSize: 18}}>{props.todo.title}</MonoText>
+      {/*
       <View style={{flexDirection: 'row'}}>
         <TouchableOpacity style={styles.button} onPress={() => console.log()}>
           <Ionicons name="create-outline" size={24} />
@@ -47,6 +49,8 @@ function TodoItem(props: any) {
           <Ionicons name="trash-outline" size={24} />
         </TouchableOpacity>
       </View>
+      */}
+      
     </View>
   )
 }
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingHorizontal: 16,
+    paddingLeft: 16,
     paddingVertical: 32
   },
   title: {
@@ -109,9 +113,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 4,
-    borderBottomWidth: 0.6,
-    borderRadius: 4,
-    marginBottom: 24
+    borderBottomWidth: 0.3,
+    borderColor: "#C4C4C4",
+    paddingVertical: 20
   },
   button: {
     marginBottom: 4,
