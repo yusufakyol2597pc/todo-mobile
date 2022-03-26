@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { Ionicons } from '@expo/vector-icons';
-import EditScreenInfo from '../../components/EditScreenInfo';
+import { useEffect, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { Text, View } from '../../components/Themed';
 import { auth, db } from '../../firebase';
 import { collection, query, where, onSnapshot, DocumentData, deleteDoc } from "firebase/firestore";
 import Toast from 'react-native-toast-message';
-import ConfirmDialog from '../../shared-components/ConfirmDialog';
 import { closeConfirmDialog, openConfirmDialog } from '../../store/actions/global.actions';
-import { CustomizedInput } from '../../components/CustomizedInput';
 import { TodoStatus } from '../../store/enums/todoStatus';
 import { TodoType } from '../../store/enums/todoType';
 import { useForm } from 'react-hook-form';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { MonoText } from '../../components/StyledText';
+import { SvgXml } from 'react-native-svg';
+import { Modalize } from 'react-native-modalize';
+import { Host, Portal } from 'react-native-portalize';
+import { appointmentIcon, completedIcon, delegateIcon, emptyIcon, inProgressIcon } from './SvgIcons';
+import BottomModal from './BottomModal';
 
 function TodoItem(props: any) {
   const dispatch = useDispatch();
@@ -37,26 +37,42 @@ function TodoItem(props: any) {
     });
   }
 
+  function getIcon(status: number): string | null {
+    switch (status) {
+      case TodoStatus.NOT_STARTED:
+        return emptyIcon;
+      case TodoStatus.IN_PROGRESS:
+        return inProgressIcon; 
+      case TodoStatus.COMPLETED:
+        return completedIcon; 
+      case TodoStatus.DELEGATED:
+        return delegateIcon; 
+      case TodoStatus.APPOINTMENT:
+        return appointmentIcon; 
+      default:
+        return emptyIcon; 
+    }
+  }
+
   return(
     <View style={styles.todoItemContainer}>
-      <MonoText style={{fontSize: 18}}>{props.todo.title}</MonoText>
-      {/*
-      <View style={{flexDirection: 'row'}}>
-        <TouchableOpacity style={styles.button} onPress={() => console.log()}>
-          <Ionicons name="create-outline" size={24} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => dispatch(openConfirmDialog("Are you sure to delete the todo?", "Yes", () => deleteTodo(props.docRef)))}>
-          <Ionicons name="trash-outline" size={24} />
-        </TouchableOpacity>
-      </View>
-      */}
-      
+      <TouchableOpacity>
+        <SvgXml onPress={() => props.onOpen(props.docRef)} style={{marginRight: 16}} xml={getIcon(props.todo.status)}/>
+      </TouchableOpacity>
+      {
+        props.todo.title ? <MonoText>{props.todo.title}</MonoText> : null
+      }
+      {
+        props.tapToCreate ? <Text style={{opacity: 0.3, fontSize: 16, fontStyle: "italic"}}>Tap to add something</Text> : <Text></Text>
+      }
     </View>
   )
 }
 
 export default function Todos(props: any) {
+  const modalizeRef = useRef<Modalize>(null);
   const [todos, setTodos] = useState([]);
+  const [selectedDoc, setSelectedDoc] = useState(null);
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       title: '',
@@ -72,22 +88,39 @@ export default function Todos(props: any) {
           querySnapshot.forEach((doc) => {
           todoList.push(doc);
       });
+      const length = 10 - todoList.length;
+      if (length > 0) {
+        todoList.push({tapToCreate: true});
+        for (let index = 0; index < length - 1; index++) {
+          todoList.push({});
+        }
+      }
       setTodos(todoList);
   });
 
     return unsubscribe;
   }, [])
+
+  const onOpen = (docRef: any) => {
+    modalizeRef.current?.open();
+    setSelectedDoc(docRef);
+  };
   
   return (
       <View style={styles.container}>
         {
           todos && todos.map((todo: any, index: number) => {
             return (
-              <TodoItem docRef={todo.ref} todo={todo.data()} key={index} index={index}/>
+              <TodoItem onOpen={onOpen} docRef={todo.ref} tapToCreate={todo.tapToCreate} todo={todo.data? todo.data(): {}} key={index} index={index}/>
             )
           }) 
         }
         {todos.length === 0 ? <Text>No todos here! Creat a todo with add button.</Text> : null}
+        <Portal>
+          <Modalize modalHeight={420} ref={modalizeRef}>
+            <BottomModal modalizeRef={modalizeRef} docRef={selectedDoc}/>
+          </Modalize>
+        </Portal>
       </View>
   );
 }
@@ -110,7 +143,6 @@ const styles = StyleSheet.create({
   },
   todoItemContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 4,
     borderBottomWidth: 0.3,

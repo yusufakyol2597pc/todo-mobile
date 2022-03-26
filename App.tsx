@@ -10,8 +10,7 @@ import AuthController from './screens/login/AuthController';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import ConfirmDialog from './shared-components/ConfirmDialog';
-
-axios.defaults.baseURL = 'http://192.168.1.201:3000';
+import { Host, Portal } from 'react-native-portalize';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -23,9 +22,11 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <Provider store={store}>
+        <Host>
           <AuthController/>
           <StatusBar />
           <ConfirmDialog/>
+        </Host>
         </Provider>
         <Toast />
       </SafeAreaProvider>
