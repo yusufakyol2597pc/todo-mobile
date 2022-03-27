@@ -14,7 +14,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import Timer from '../screens/timer/Timer';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 import TodosSwiper from '../screens/todo/TodosSwiper';
@@ -116,9 +116,10 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="TabTwo"
-        component={TabTwoScreen}
+        component={Timer}
         options={{
           title: 'Timer',
+          headerShown: false,
           tabBarItemStyle: {
             padding: 14,
             borderRightWidth: 0.3,

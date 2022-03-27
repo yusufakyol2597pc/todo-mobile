@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Text, View } from '../../components/Themed';
 import { auth, db } from '../../firebase';
@@ -15,9 +15,16 @@ import { Modalize } from 'react-native-modalize';
 import { Host, Portal } from 'react-native-portalize';
 import { appointmentIcon, completedIcon, delegateIcon, emptyIcon, inProgressIcon } from './SvgIcons';
 import BottomModal from './BottomModal';
+import { CustomizedInput } from '../../components/CustomizedInput';
 
 function TodoItem(props: any) {
+  const [create, setCreate] = useState(false);
   const dispatch = useDispatch();
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      todoTitle: ''
+    }
+});
 
   function deleteTodo(docRef: any) {
     dispatch(closeConfirmDialog());
@@ -63,7 +70,13 @@ function TodoItem(props: any) {
         props.todo.title ? <MonoText>{props.todo.title}</MonoText> : null
       }
       {
-        props.tapToCreate ? <Text style={{opacity: 0.3, fontSize: 16, fontStyle: "italic"}}>Tap to add something</Text> : <Text></Text>
+        props.tapToCreate ? 
+        create ? 
+        <TextInput onChangeText={() => console.log("asda")}/>
+        :
+        <Text onPress={() => setCreate(true)} style={{opacity: 0.3, fontSize: 16, fontStyle: "italic"}}>Tap to add something</Text> 
+        : 
+        <Text></Text>
       }
     </View>
   )
