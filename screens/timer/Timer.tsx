@@ -3,6 +3,7 @@ import { MonoText } from '../../components/StyledText';
 import { View } from '../../components/Themed';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { useState } from 'react';
+import i18n from 'i18n-js';
 
 const focusTime = 20 * 60;
 const restTime = 5 * 60;
@@ -15,7 +16,7 @@ export default function Timer() {
 
   return (
     <View style={styles.container}>
-      <MonoText style={{fontSize: 16}}>{phase == 2 ? "Rest Mode": "Focus Mode"}</MonoText>
+      <MonoText style={{fontSize: 16}}>{phase == 2 ? i18n.t('restMode'): i18n.t('focusMode')}</MonoText>
       <View style={styles.content}>
         <View style={{width: 10, height: 10, borderRadius: 5, backgroundColor: phase === 2 ? "#602CB5" : "#B52C46", marginBottom: 32}}></View>
         <CountdownCircleTimer
@@ -43,7 +44,7 @@ export default function Timer() {
                   setDuration(focusTime);
                   setPhase(1);
                 }}>
-                <MonoText style={{fontSize: 18, fontWeight: "400", color: "#B52C46"}}>Start</MonoText>
+                <MonoText style={{fontSize: 18, fontWeight: "400", color: "#B52C46"}}>{i18n.t('start')}</MonoText>
               </TouchableOpacity>
               )
             }
@@ -52,7 +53,7 @@ export default function Timer() {
             )
           }}
         </CountdownCircleTimer>
-        <MonoText style={{fontSize: 16, marginTop: 16}}>{Math.floor((remTime % 3600) / 60) + " minutes and " + remTime % 60 + " seconds left"}</MonoText>  
+        <MonoText style={{fontSize: 16, marginTop: 16}}>{i18n.t('remTime', {minutes: Math.floor((remTime % 3600) / 60), seconds: remTime % 60})}</MonoText>  
       </View>
     </View>
   );

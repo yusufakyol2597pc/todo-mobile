@@ -1,4 +1,3 @@
-import axios from "axios";
 import { SIGNIN_OR_SIGNUP_ENDED, SIGNIN_OR_SIGNUP_STARTED } from "../constants/global.constants";
 import Toast from 'react-native-toast-message';
 import { createUserWithEmailAndPassword, getRedirectResult, GoogleAuthProvider, signInWithEmailAndPassword, signInWithRedirect } from "firebase/auth";

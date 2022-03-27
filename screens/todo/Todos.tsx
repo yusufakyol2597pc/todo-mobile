@@ -15,7 +15,7 @@ import { Modalize } from 'react-native-modalize';
 import { Host, Portal } from 'react-native-portalize';
 import { appointmentIcon, completedIcon, delegateIcon, emptyIcon, inProgressIcon } from './SvgIcons';
 import BottomModal from './BottomModal';
-import { CustomizedInput } from '../../components/CustomizedInput';
+import i18n from 'i18n-js';
 
 function TodoItem(props: any) {
   const [create, setCreate] = useState(false);
@@ -74,7 +74,7 @@ function TodoItem(props: any) {
         create ? 
         <TextInput onChangeText={() => console.log("asda")}/>
         :
-        <Text onPress={() => setCreate(true)} style={{opacity: 0.3, fontSize: 16, fontStyle: "italic"}}>Tap to add something</Text> 
+        <Text onPress={() => setCreate(true)} style={{opacity: 0.3, fontSize: 16, fontStyle: "italic"}}>{i18n.t('tapToAddSomething')}</Text> 
         : 
         <Text></Text>
       }

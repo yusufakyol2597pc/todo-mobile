@@ -1,4 +1,3 @@
-import axios from "axios";
 import { SIGNIN_OR_SIGNUP_STARTED, SIGNIN_OR_SIGNUP_ENDED, SET_CONFIRM_DIALOG } from "../constants/global.constants"
 
 const initialState = {

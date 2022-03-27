@@ -20,6 +20,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 import TodosSwiper from '../screens/todo/TodosSwiper';
 import { SvgXml } from 'react-native-svg';
 import ProfileScreen from '../screens/profile/ProfileScreen';
+import i18n from 'i18n-js';
 
 const todoXml = `
 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +97,7 @@ function BottomTabNavigator() {
         name="TabOne"
         component={TodosSwiper}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'To-do',
+          title: i18n.t('todo'),
           tabBarIcon: ({ color }) => <SvgXml xml={todoXml}/>,
           headerRight: () => (
             <Pressable
@@ -118,7 +119,7 @@ function BottomTabNavigator() {
         name="TabTwo"
         component={Timer}
         options={{
-          title: 'Timer',
+          title: i18n.t('timer'),
           headerShown: false,
           tabBarItemStyle: {
             padding: 14,
@@ -133,7 +134,7 @@ function BottomTabNavigator() {
         name="TabThree"
         component={ProfileScreen}
         options={{
-          title: 'Profile',
+          title: i18n.t('profile'),
           tabBarIcon: ({ color }) => <SvgXml xml={profileXml}/>,
         }}
       />

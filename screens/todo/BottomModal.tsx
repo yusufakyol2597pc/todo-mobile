@@ -5,6 +5,7 @@ import { SvgXml } from 'react-native-svg';
 import { appointmentIcon, cancelIcon, completedIcon, delegateIcon, editIcon, inProgressIcon, moveIcon } from './SvgIcons';
 import { updateDoc } from 'firebase/firestore';
 import { TodoStatus } from '../../store/enums/todoStatus';
+import i18n from 'i18n-js';
 
 export default function BottomModal(props: any) {
 
@@ -24,32 +25,32 @@ export default function BottomModal(props: any) {
         <View style={styles.container}>
             <TouchableOpacity style={styles.todoItemContainer} onPress={() => updateDocument(TodoStatus.COMPLETED)}>
                 <SvgXml onPress={props.onOpen} style={{marginRight: 16}} xml={completedIcon}/>
-                <MonoText>Complete</MonoText> 
+                <MonoText>{i18n.t('complete')}</MonoText> 
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.todoItemContainer} onPress={() => updateDocument(TodoStatus.IN_PROGRESS)}>
                 <SvgXml onPress={props.onOpen} style={{marginRight: 16}} xml={inProgressIcon}/>
-                <MonoText>In progress</MonoText> 
+                <MonoText>{i18n.t('inProgress')}</MonoText> 
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.todoItemContainer} onPress={() => updateDocument(TodoStatus.DELEGATED)}>
                 <SvgXml onPress={props.onOpen} style={{marginRight: 16}} xml={delegateIcon}/>
-                <MonoText>Delegated</MonoText> 
+                <MonoText>{i18n.t('delegated')}</MonoText> 
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.todoItemContainer} onPress={() => updateDocument(TodoStatus.APPOINTMENT)}>
                 <SvgXml onPress={props.onOpen} style={{marginRight: 16}} xml={appointmentIcon}/>
-                <MonoText>Appointment</MonoText> 
+                <MonoText>{i18n.t('appointment')}</MonoText> 
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.todoItemContainer}>
                 <SvgXml onPress={props.onOpen} style={{marginRight: 16}} xml={moveIcon}/>
-                <MonoText>Move</MonoText> 
+                <MonoText>{i18n.t('move')}</MonoText> 
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.todoItemContainer}>
                 <SvgXml onPress={props.onOpen} style={{marginRight: 16}} xml={editIcon}/>
-                <MonoText>Edit</MonoText> 
+                <MonoText>{i18n.t('edit')}</MonoText> 
             </TouchableOpacity>
         </View>
     );

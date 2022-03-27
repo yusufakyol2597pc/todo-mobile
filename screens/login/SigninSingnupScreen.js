@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, register, signinWithGoogle } from "../../store/actions/user.actions";
 import { CustomizedInput } from "../../components/CustomizedInput";
 import { MonoText } from "../../components/StyledText";
+import i18n from 'i18n-js';
 
 function Signup(props) {
     const dispatch = useDispatch();
@@ -24,7 +25,7 @@ function Signup(props) {
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={64}>
             <MonoText style={styles.title}>Digital</MonoText>
-            <MonoText>CREATE ACCOUNT</MonoText>
+            <MonoText>{i18n.t('createAccount')}</MonoText>
 
             <View style={{backgroundColor: '#F1EADE', marginTop: 24}}>
                 <MonoText style={{marginBottom: 4}}>Email</MonoText>
@@ -32,20 +33,20 @@ function Signup(props) {
             </View>
 
             <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
-                <MonoText style={{marginBottom: 4}}>Password</MonoText>
+                <MonoText style={{marginBottom: 4}}>{i18n.t('password')}</MonoText>
                 <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key"/>
             </View>
 
             <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
-                <MonoText style={{marginBottom: 4}}>Confirm Password</MonoText>
+                <MonoText style={{marginBottom: 4}}>{i18n.t('confirmPassword')}</MonoText>
                 <CustomizedInput name="password-confirm" secureTextEntry={true} control={control} icon="key"/>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-                <MonoText style={{color: "white", fontSize: 18}}>Sign Up</MonoText>
+                <MonoText style={{color: "white", fontSize: 18}}>{i18n.t('signup')}</MonoText>
             </TouchableOpacity>
 
-            <MonoText style={{marginVertical: 24, textDecorationLine: 'underline'}} onPress={props.setHaveAccount}>Already have an account? Log in</MonoText>
+            <MonoText style={{marginVertical: 24, textDecorationLine: 'underline'}} onPress={props.setHaveAccount}>{i18n.t('alreadyHave')}</MonoText>
         </KeyboardAvoidingView>
     )
 }
@@ -69,7 +70,7 @@ function Signin(props) {
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding">
             <MonoText style={styles.title}>Digital</MonoText>
-            <MonoText>LOG IN</MonoText>
+            <MonoText>{i18n.t('login')}</MonoText>
             
             <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
                 <MonoText style={{marginBottom: 4}}>Email</MonoText>
@@ -79,18 +80,18 @@ function Signin(props) {
             {errors.email && <Text style={styles.errorText}>Email is required.</Text>}
 
             <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
-                <MonoText style={{marginBottom: 4}}>Password</MonoText>
+                <MonoText style={{marginBottom: 4}}>{i18n.t('password')}</MonoText>
                 <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key"/>
             </View>
             {errors.password && <Text style={styles.errorText}>Password is required.</Text>}
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-                <MonoText style={{color: "white", fontSize: 18}}>Log in</MonoText>
+                <MonoText style={{color: "white", fontSize: 18}}>{i18n.t('login')}</MonoText>
             </TouchableOpacity>
 
-            <MonoText style={{marginVertical: 24, textDecorationLine: 'underline'}}>Forgot password</MonoText>
+            <MonoText style={{marginVertical: 24, textDecorationLine: 'underline'}}>{i18n.t('forgotPassword')}</MonoText>
 
-            <MonoText style={{textDecorationLine: 'underline'}} onPress={props.setHaveAccount}>New here? Create an account</MonoText>
+            <MonoText style={{textDecorationLine: 'underline'}} onPress={props.setHaveAccount}>{i18n.t('newHere')}</MonoText>
 
             {loading ? <ActivityIndicator style={{marginTop: 16}}/> : null}
         </KeyboardAvoidingView>
