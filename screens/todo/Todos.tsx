@@ -86,6 +86,7 @@ function TodoItem(props: any) {
             style={{
                 ...styles.todoItemContainer,
                 backgroundColor: props.bgColor,
+                borderColor: props.lineColor,
             }}
         >
             <TouchableOpacity>
@@ -127,6 +128,7 @@ export default function Todos(props: any) {
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
     const [bgColor, setBgColor] = useState("#FFFEFE");
+    const [lineColor, setLineColor] = useState("#FFFEFE");
     const [todos, setTodos] = useState([]);
     const [selectedDoc, setSelectedDoc] = useState(null);
     const {
@@ -231,10 +233,12 @@ export default function Todos(props: any) {
     useEffect(() => {
         if (props.date.type === TodoType.DAILY) {
             setDailyTodos();
+            setLineColor("#C4C4C4");
             return;
         }
         if (props.date.type === TodoType.SOME_DAY) {
             setSomeDayTodos();
+            setLineColor("#8B816B");
             return;
         }
         setPreviousTodos();
@@ -294,6 +298,7 @@ export default function Todos(props: any) {
                             key={index}
                             index={index}
                             bgColor={bgColor}
+                            lineColor={lineColor}
                         />
                     );
                 })}
@@ -329,7 +334,6 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: 4,
         borderBottomWidth: 0.3,
-        borderColor: "#C4C4C4",
         paddingVertical: 20,
     },
     button: {
