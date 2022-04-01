@@ -99,20 +99,7 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: i18n.t('todo'),
           tabBarIcon: ({ color }) => <SvgXml xml={todoXml}/>,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <Ionicons
-                name="add-circle-outline"
-                size={32}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
+          headerShown: false
         })}
       />
       <BottomTab.Screen

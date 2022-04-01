@@ -16,7 +16,7 @@ export default function ModalScreen() {
       defaultValues: {
         title: '',
         status: TodoStatus.NOT_STARTED,
-        type: TodoType.TODAY,
+        type: TodoType.DAILY,
         date: new Date()
       }
   });
