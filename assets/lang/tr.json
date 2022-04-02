@@ -20,5 +20,8 @@
     "restMode": "Dinlenme Mody",
     "focusMode": "Odaklanma Modu" ,
     "start": "Başla",
-    "remTime": "{{minutes}} dakika {{seconds}} saniye kaldı"
+    "remTime": "{{minutes}} dakika {{seconds}} saniye kaldı",
+    "today": "Bugün",
+    "nextDay": "Yarın",
+    "someDay": "Herhangi Bir Gün"
 }

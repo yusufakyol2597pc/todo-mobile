@@ -20,5 +20,8 @@
     "restMode": "Rest Mode",
     "focusMode": "Focus Modes" ,
     "start": "Start",
-    "remTime": "{{minutes}} minutes and {{seconds}} seconds left"
+    "remTime": "{{minutes}} minutes and {{seconds}} seconds left",
+    "today": "Today",
+    "nextDay": "Next Day",
+    "someDay": "Some Day"
 }

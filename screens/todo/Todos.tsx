@@ -231,9 +231,9 @@ export default function Todos(props: any) {
     }
 
     useEffect(() => {
+        setLineColor("#C4C4C4");
         if (props.date.type === TodoType.DAILY) {
             setDailyTodos();
-            setLineColor("#C4C4C4");
             return;
         }
         if (props.date.type === TodoType.SOME_DAY) {
@@ -249,12 +249,12 @@ export default function Todos(props: any) {
         if (props.date.type === TodoType.DAILY) {
             date = new Date(props.date.date);
             if (props.date.isToday) {
-                setTitle("Today");
+                setTitle(i18n.t("today"));
             } else {
-                setTitle("Next Day");
+                setTitle(i18n.t("nextDay"));
             }
         } else if (props.date.type === TodoType.SOME_DAY) {
-            setTitle("Some Day");
+            setTitle(i18n.t("someDay"));
             return;
         } else {
             date = props.date.date.toDate();
@@ -278,10 +278,13 @@ export default function Todos(props: any) {
             <View
                 style={{
                     flex: 0,
-                    flexDirection: "row",
                     justifyContent: "space-between",
                     paddingRight: 16,
                     backgroundColor: bgColor,
+                    ...styles.todoItemContainer,
+                    borderColor: props.lineColor,
+                    paddingVertical: 0,
+                    paddingBottom: 20,
                 }}
             >
                 <MonoText style={{ fontSize: 16 }}>{title}</MonoText>
