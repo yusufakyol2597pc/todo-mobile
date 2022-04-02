@@ -31,9 +31,10 @@ import {
     inProgressIcon,
 } from "./SvgIcons";
 import BottomModal from "./BottomModal";
-import i18n from "i18n-js";
+import { useTranslation } from "react-i18next";
 
 function TodoItem(props: any) {
+    const { t, i18n } = useTranslation();
     const [create, setCreate] = useState(false);
     const dispatch = useDispatch();
     const {
@@ -124,6 +125,7 @@ function TodoItem(props: any) {
 }
 
 export default function Todos(props: any) {
+    const { t, i18n } = useTranslation();
     const modalizeRef = useRef<Modalize>(null);
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");

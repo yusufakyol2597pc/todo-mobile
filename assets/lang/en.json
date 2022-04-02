@@ -1,5 +1,6 @@
 {
     "login": "Log in",
+    "logout": "Log out",
     "signup": "Sign up",
     "createAccount": "Create Account",
     "password": "Password",
@@ -23,5 +24,12 @@
     "remTime": "{{minutes}} minutes and {{seconds}} seconds left",
     "today": "Today",
     "nextDay": "Next Day",
-    "someDay": "Some Day"
+    "someDay": "Some Day",
+    "saveChanges": "Save Changes",
+    "terms": "Terms of Use",
+    "privacy": "Privacy and Policy",
+    "selectLang": "Select a language",
+    "language": "Language",
+    "english": "English",
+    "turkish": "Turkish"
 }

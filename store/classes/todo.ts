@@ -29,10 +29,6 @@ export class Todo {
             userId: auth.currentUser?.uid,
         })
         .then(() => {
-            Toast.show({
-                type: "success",
-                text1: "Todo is created."
-            });
         });
     }
 }

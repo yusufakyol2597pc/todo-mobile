@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, register, signinWithGoogle } from "../../store/actions/user.actions";
 import { CustomizedInput } from "../../components/CustomizedInput";
 import { MonoText } from "../../components/StyledText";
-import i18n from 'i18n-js';
+import { useTranslation } from "react-i18next";
 
 function Signup(props) {
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
@@ -29,17 +30,17 @@ function Signup(props) {
 
             <View style={{backgroundColor: '#F1EADE', marginTop: 24}}>
                 <MonoText style={{marginBottom: 4}}>Email</MonoText>
-                <CustomizedInput name="email" control={control} icon="mail"/>
+                <CustomizedInput name="email" control={control} icon="mail" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
 
             <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
                 <MonoText style={{marginBottom: 4}}>{i18n.t('password')}</MonoText>
-                <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key"/>
+                <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
 
             <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
                 <MonoText style={{marginBottom: 4}}>{i18n.t('confirmPassword')}</MonoText>
-                <CustomizedInput name="password-confirm" secureTextEntry={true} control={control} icon="key"/>
+                <CustomizedInput name="password-confirm" secureTextEntry={true} control={control} icon="key" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
@@ -52,6 +53,7 @@ function Signup(props) {
 }
 
 function Signin(props) {
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const {loading} = useSelector(state => state.global);
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -74,14 +76,14 @@ function Signin(props) {
             
             <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
                 <MonoText style={{marginBottom: 4}}>Email</MonoText>
-                <CustomizedInput name="email" control={control} icon="mail"/>
+                <CustomizedInput name="email" control={control} icon="mail" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
             
             {errors.email && <Text style={styles.errorText}>Email is required.</Text>}
 
             <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
                 <MonoText style={{marginBottom: 4}}>{i18n.t('password')}</MonoText>
-                <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key"/>
+                <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
             {errors.password && <Text style={styles.errorText}>Password is required.</Text>}
 

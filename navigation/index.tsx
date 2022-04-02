@@ -3,24 +3,32 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
-import { ColorSchemeName, Pressable, Image } from 'react-native';
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+    NavigationContainer,
+    DefaultTheme,
+    DarkTheme,
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as React from "react";
+import { ColorSchemeName, Pressable, Image } from "react-native";
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import ModalScreen from '../screens/ModalScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
-import Timer from '../screens/timer/Timer';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
-import LinkingConfiguration from './LinkingConfiguration';
-import TodosSwiper from '../screens/todo/TodosSwiper';
-import { SvgXml } from 'react-native-svg';
-import ProfileScreen from '../screens/profile/ProfileScreen';
-import i18n from 'i18n-js';
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
+import ModalScreen from "../screens/ModalScreen";
+import NotFoundScreen from "../screens/NotFoundScreen";
+import Timer from "../screens/timer/Timer";
+import {
+    RootStackParamList,
+    RootTabParamList,
+    RootTabScreenProps,
+} from "../types";
+import LinkingConfiguration from "./LinkingConfiguration";
+import TodosSwiper from "../screens/todo/TodosSwiper";
+import { SvgXml } from "react-native-svg";
+import ProfileScreen from "../screens/profile/ProfileScreen";
+import { useTranslation } from "react-i18next";
 
 const todoXml = `
 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,14 +48,19 @@ const profileXml = `
 </svg>
 `;
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
-  );
+export default function Navigation({
+    colorScheme,
+}: {
+    colorScheme: ColorSchemeName;
+}) {
+    return (
+        <NavigationContainer
+            linking={LinkingConfiguration}
+            theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+            <RootNavigator />
+        </NavigationContainer>
+    );
 }
 
 /**
@@ -57,15 +70,23 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="Root"
+                component={BottomTabNavigator}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="NotFound"
+                component={NotFoundScreen}
+                options={{ title: "Oops!" }}
+            />
+            <Stack.Group screenOptions={{ presentation: "modal" }}>
+                <Stack.Screen name="Modal" component={ModalScreen} />
+            </Stack.Group>
+        </Stack.Navigator>
+    );
 }
 
 /**
@@ -75,66 +96,69 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+    const { t, i18n } = useTranslation();
+    const colorScheme = useColorScheme();
 
-  return (
-    <BottomTab.Navigator
-      initialRouteName="TabOne"
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: "#38383A",
-          height: "12%"
-        },
-        tabBarLabelStyle: {
-          color: "#FFFFFF",
-          fontFamily: 'pressura-mono'
-        },
-        tabBarItemStyle: {
-          padding: 14
-        }
-      }}>
-      <BottomTab.Screen
-        name="TabOne"
-        component={TodosSwiper}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: i18n.t('todo'),
-          tabBarIcon: ({ color }) => <SvgXml xml={todoXml}/>,
-          headerShown: false
-        })}
-      />
-      <BottomTab.Screen
-        name="TabTwo"
-        component={Timer}
-        options={{
-          title: i18n.t('timer'),
-          headerShown: false,
-          tabBarItemStyle: {
-            padding: 14,
-            borderRightWidth: 0.3,
-            borderLeftWidth: 0.3,
-            borderColor: "#505050"
-          },
-          tabBarIcon: ({ color }) => <SvgXml xml={timerXml}/>,
-        }}
-      />
-      <BottomTab.Screen
-        name="TabThree"
-        component={ProfileScreen}
-        options={{
-          title: i18n.t('profile'),
-          tabBarIcon: ({ color }) => <SvgXml xml={profileXml}/>,
-        }}
-      />
-    </BottomTab.Navigator>
-  );
+    return (
+        <BottomTab.Navigator
+            initialRouteName="TabOne"
+            screenOptions={{
+                tabBarStyle: {
+                    backgroundColor: "#38383A",
+                    height: "12%",
+                },
+                tabBarLabelStyle: {
+                    color: "#FFFFFF",
+                    fontFamily: "pressura-mono",
+                },
+                tabBarItemStyle: {
+                    padding: 14,
+                },
+            }}
+        >
+            <BottomTab.Screen
+                name="TabOne"
+                component={TodosSwiper}
+                options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
+                    title: i18n.t("todo"),
+                    tabBarIcon: ({ color }) => <SvgXml xml={todoXml} />,
+                    headerShown: false,
+                })}
+            />
+            <BottomTab.Screen
+                name="TabTwo"
+                component={Timer}
+                options={{
+                    title: i18n.t("timer"),
+                    headerShown: false,
+                    tabBarItemStyle: {
+                        padding: 14,
+                        borderRightWidth: 0.3,
+                        borderLeftWidth: 0.3,
+                        borderColor: "#505050",
+                    },
+                    tabBarIcon: ({ color }) => <SvgXml xml={timerXml} />,
+                }}
+            />
+            <BottomTab.Screen
+                name="TabThree"
+                component={ProfileScreen}
+                options={{
+                    title: i18n.t("profile"),
+                    headerShown: false,
+                    tabBarIcon: ({ color }) => <SvgXml xml={profileXml} />,
+                }}
+            />
+        </BottomTab.Navigator>
+    );
 }
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
+    name: React.ComponentProps<typeof FontAwesome>["name"];
+    color: string;
 }) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+    return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }

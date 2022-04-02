@@ -1,5 +1,6 @@
 {
     "login": "Giriş yap",
+    "logout": "Çıkış yap",
     "signup": "Kayıt ol",
     "createAccount": "Hesap oluştur",
     "password": "Şifre",
@@ -23,5 +24,12 @@
     "remTime": "{{minutes}} dakika {{seconds}} saniye kaldı",
     "today": "Bugün",
     "nextDay": "Yarın",
-    "someDay": "Herhangi Bir Gün"
+    "someDay": "Herhangi Bir Gün",
+    "saveChanges": "Kaydet",
+    "terms": "Kullanım Şartları",
+    "privacy": "Gizlilik ve Güvenlik",
+    "selectLang": "Bir dil seçiniz",
+    "language": "Dil",
+    "english": "İngilizce",
+    "turkish": "Türkçe"
 }
