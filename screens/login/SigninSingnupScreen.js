@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 function Signup(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, formState: { errors }, setValue } = useForm({
         defaultValues: {
           username: '',
           email: '',
@@ -29,18 +29,18 @@ function Signup(props) {
             <MonoText>{i18n.t('createAccount')}</MonoText>
 
             <View style={{backgroundColor: '#F1EADE', marginTop: 24}}>
-                <MonoText style={{marginBottom: 4}}>Email</MonoText>
-                <CustomizedInput name="email" control={control} icon="mail" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                <MonoText style={{marginBottom: 3}}>Email</MonoText>
+                <CustomizedInput name="email" setValue={setValue} control={control} delete={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
 
             <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
-                <MonoText style={{marginBottom: 4}}>{i18n.t('password')}</MonoText>
-                <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                <MonoText style={{marginBottom: 3}}>{i18n.t('password')}</MonoText>
+                <CustomizedInput name="password" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
 
             <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
-                <MonoText style={{marginBottom: 4}}>{i18n.t('confirmPassword')}</MonoText>
-                <CustomizedInput name="password-confirm" secureTextEntry={true} control={control} icon="key" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                <MonoText style={{marginBottom: 3}}>{i18n.t('confirmPassword')}</MonoText>
+                <CustomizedInput name="password-confirm" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
@@ -56,7 +56,7 @@ function Signin(props) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const {loading} = useSelector(state => state.global);
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, formState: { errors }, setValue } = useForm({
         defaultValues: {
           email: '',
           password: '',
@@ -75,15 +75,15 @@ function Signin(props) {
             <MonoText>{i18n.t('login')}</MonoText>
             
             <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
-                <MonoText style={{marginBottom: 4}}>Email</MonoText>
-                <CustomizedInput name="email" control={control} icon="mail" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                <MonoText style={{marginBottom: 3}}>Email</MonoText>
+                <CustomizedInput name="email" setValue={setValue} control={control} delete={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
             
             {errors.email && <Text style={styles.errorText}>Email is required.</Text>}
 
             <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
-                <MonoText style={{marginBottom: 4}}>{i18n.t('password')}</MonoText>
-                <CustomizedInput name="password" secureTextEntry={true} control={control} icon="key" borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                <MonoText style={{marginBottom: 3}}>{i18n.t('password')}</MonoText>
+                <CustomizedInput name="password" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
             </View>
             {errors.password && <Text style={styles.errorText}>Password is required.</Text>}
 
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: 16,
-      paddingHorizontal: 42,
+      paddingHorizontal: 32,
       backgroundColor: '#F1EADE'
     },
     title: {
