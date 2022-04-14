@@ -172,9 +172,17 @@ function TodoItem(props: any) {
                 create ? (
                     <TextInput
                         autoFocus={true}
-                        onChangeText={(value) => setTodoTitle(value)}
+                        onChangeText={(value) => {
+                            if (value.length < 30) {
+                                setTodoTitle(value);
+                            }
+                        }}
                         onEndEditing={() => createTodo()}
-                        style={{ width: "80%" }}
+                        style={{
+                            width: "80%",
+                            fontSize: 18,
+                            fontFamily: "pressura-mono",
+                        }}
                     />
                 ) : (
                     <MonoText
