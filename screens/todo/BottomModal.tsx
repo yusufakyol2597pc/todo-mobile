@@ -24,10 +24,14 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { closeConfirmDialog } from "../../store/actions/global.actions";
 import Toast from "react-native-toast-message";
+import { useState } from "react";
+import { TodoType } from "../../store/enums/todoType";
+import { managePanProps } from "react-native-gesture-handler/lib/typescript/handlers/PanGestureHandler";
 
 export default function BottomModal(props: any) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+    const [isMove, setIsMove] = useState(false);
 
     async function updateDocument(status: TodoStatus) {
         if (!props.docRef || !status) {
@@ -60,6 +64,80 @@ export default function BottomModal(props: any) {
                     text1: errorMessage,
                 });
             });
+    }
+
+    function moveToNextDay() {
+        if (!props.docRef) {
+            return;
+        }
+        props.modalizeRef.current?.close();
+        var date = new Date();
+        date.setDate(date.getDate() + 1);
+        date.setHours(12, 0, 0, 0);
+        updateDoc(props.docRef, {
+            type: TodoType.DAILY,
+            date: date,
+        })
+            .then(() => {})
+            .catch((error) => {
+                const errorMessage = error.message;
+                Toast.show({
+                    type: "error",
+                    text1: errorMessage,
+                });
+            });
+    }
+
+    function moveToSomeDay() {
+        if (!props.docRef) {
+            return;
+        }
+        props.modalizeRef.current?.close();
+        updateDoc(props.docRef, {
+            type: TodoType.SOME_DAY,
+        })
+            .then(() => {})
+            .catch((error) => {
+                const errorMessage = error.message;
+                Toast.show({
+                    type: "error",
+                    text1: errorMessage,
+                });
+            });
+    }
+
+    if (isMove) {
+        return (
+            <View style={styles.container}>
+                {props.cardTitle !== "nextDay" && (
+                    <TouchableOpacity
+                        style={styles.todoItemContainer}
+                        onPress={() => moveToNextDay()}
+                    >
+                        <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                        <MonoText>{i18n.t("moveNextDay")}</MonoText>
+                    </TouchableOpacity>
+                )}
+
+                {props.cardTitle !== "someDay" && (
+                    <TouchableOpacity
+                        style={styles.todoItemContainer}
+                        onPress={() => moveToSomeDay()}
+                    >
+                        <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                        <MonoText>{i18n.t("moveSomeDay")}</MonoText>
+                    </TouchableOpacity>
+                )}
+
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => setIsMove(false)}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                    <MonoText>{i18n.t("back")}</MonoText>
+                </TouchableOpacity>
+            </View>
+        );
     }
 
     return (
@@ -112,7 +190,10 @@ export default function BottomModal(props: any) {
                 <MonoText>{i18n.t("appointment")}</MonoText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.todoItemContainer}>
+            <TouchableOpacity
+                style={styles.todoItemContainer}
+                onPress={() => setIsMove(true)}
+            >
                 <SvgXml
                     onPress={props.onOpen}
                     style={{ marginRight: 16 }}

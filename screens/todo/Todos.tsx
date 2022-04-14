@@ -75,11 +75,7 @@ function TodoItem(props: any) {
     }
 
     function createTodo() {
-        console.log("todoTitle", todoTitle, create);
-
         if (todoTitle === "") {
-            console.log("todoTitle", todoTitle);
-
             setCreate(false);
             return;
         }
@@ -119,26 +115,28 @@ function TodoItem(props: any) {
         setCreate(false);
         setTodoTitle("");
 
-        date.setHours(0, 0, 0, 0);
-        var dateEnd = new Date(date);
-        dateEnd.setHours(23, 59, 59, 100);
-        const q = query(
-            collection(db, "dates"),
-            where("userId", "==", auth.currentUser?.uid),
-            where("date", "<=", dateEnd),
-            where("date", ">=", date)
-        );
+        if (date) {
+            date.setHours(0, 0, 0, 0);
+            var dateEnd = new Date(date);
+            dateEnd.setHours(23, 59, 59, 100);
+            const q = query(
+                collection(db, "dates"),
+                where("userId", "==", auth.currentUser?.uid),
+                where("date", "<=", dateEnd),
+                where("date", ">=", date)
+            );
 
-        getDocs(q)
-            .then((querySnapshot) => {
-                if (querySnapshot.docs.length === 0) {
-                    addDoc(collection(db, "dates"), {
-                        date: date,
-                        userId: auth.currentUser?.uid,
-                    });
-                }
-            })
-            .catch((e) => {});
+            getDocs(q)
+                .then((querySnapshot) => {
+                    if (querySnapshot.docs.length === 0) {
+                        addDoc(collection(db, "dates"), {
+                            date: date,
+                            userId: auth.currentUser?.uid,
+                        });
+                    }
+                })
+                .catch((e) => {});
+        }
     }
 
     return (
@@ -225,9 +223,9 @@ export default function Todos(props: any) {
             collection(db, "todo"),
             where("type", "==", TodoType.DAILY),
             where("userId", "==", auth.currentUser?.uid),
+            orderBy("date", "asc"),
             where("date", ">=", beginningOfTheDay),
-            where("date", "<=", endOfTheDay),
-            orderBy("date", "asc")
+            where("date", "<=", endOfTheDay)
         );
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -255,9 +253,9 @@ export default function Todos(props: any) {
             collection(db, "todo"),
             where("type", "==", TodoType.DAILY),
             where("userId", "==", auth.currentUser?.uid),
+            orderBy("date", "asc"),
             where("date", ">=", props.date.date),
-            where("date", "<", createdAt),
-            orderBy("date", "asc")
+            where("date", "<", createdAt)
         );
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const todoList: any = [];
@@ -388,6 +386,7 @@ export default function Todos(props: any) {
                     <BottomModal
                         modalizeRef={modalizeRef}
                         docRef={selectedDoc}
+                        cardTitle={title}
                     />
                 </Modalize>
             </Portal>
