@@ -159,7 +159,15 @@ function TodoItem(props: any) {
                     xml={getIcon(props.todo.status)}
                 />
             </TouchableOpacity>
-            {props.todo.title ? <MonoText>{props.todo.title}</MonoText> : null}
+            {props.todo.title ? (
+                <MonoText
+                    style={{
+                        fontSize: 18,
+                    }}
+                >
+                    {props.todo.title}
+                </MonoText>
+            ) : null}
             {props.tapToCreate ? (
                 create ? (
                     <TextInput
@@ -169,16 +177,15 @@ function TodoItem(props: any) {
                         style={{ width: "80%" }}
                     />
                 ) : (
-                    <Text
+                    <MonoText
                         onPress={() => setCreate(true)}
                         style={{
                             opacity: 0.3,
-                            fontSize: 16,
-                            fontStyle: "italic",
+                            fontSize: 18,
                         }}
                     >
                         {i18n.t("tapToAddSomething")}
-                    </Text>
+                    </MonoText>
                 )
             ) : (
                 <Text></Text>
