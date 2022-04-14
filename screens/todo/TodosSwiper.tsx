@@ -4,7 +4,13 @@ import { AppRegistry, StyleSheet, Text, View } from "react-native";
 import Swiper from "react-native-swiper";
 import Todos from "./Todos";
 import { RootTabScreenProps } from "../../types";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+    collection,
+    onSnapshot,
+    orderBy,
+    query,
+    where,
+} from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { TodoType } from "../../store/enums/todoType";
 
@@ -47,7 +53,8 @@ export default function TodosSwiper({
         const q = query(
             collection(db, "dates"),
             where("userId", "==", auth.currentUser?.uid),
-            where("date", "<", today)
+            where("date", "<", today),
+            orderBy("date", "desc")
         );
         var dateList: any = [];
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -64,16 +71,12 @@ export default function TodosSwiper({
 
             dateList.push({ type: TodoType.SOME_DAY });
             setPages(dateList);
-            swiper.current.scrollBy(dateList.length - 3);
+            setTimeout(() => {
+                swiper.current.scrollBy(dateList.length - 3);
+            }, 200);
         });
 
         return unsubscribe;
-    }, []);
-
-    useEffect(() => {
-        if (swiper && pages.length > 0) {
-            swiper.current.scrollBy(pages.length - 3);
-        }
     }, []);
 
     return (

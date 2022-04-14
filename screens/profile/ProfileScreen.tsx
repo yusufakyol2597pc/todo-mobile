@@ -67,31 +67,33 @@ export default function ProfileScreen({
 
     const onSubmit = (data) => {
         console.log("data", data);
-        if (data.password !== data.confirm_password) {
-            Toast.show({
-                type: "error",
-                text1: "Passwords do not match!",
-            });
-            return;
-        }
-        const user = auth.currentUser;
-        if (!user) {
-            return;
-        }
-        updatePassword(user, data.password)
-            .then(() => {
-                Toast.show({
-                    type: "success",
-                    text1: "Password changed successfully!",
-                });
-            })
-            .catch((error) => {
+        i18n.changeLanguage(value);
+        if (data.password.length > 0) {
+            if (data.password !== data.confirm_password) {
                 Toast.show({
                     type: "error",
-                    text1: "An error ocurred!",
+                    text1: i18n.t("passwordsNotSame"),
                 });
-                console.log("error", error);
-            });
+                return;
+            }
+            const user = auth.currentUser;
+            if (!user) {
+                return;
+            }
+            updatePassword(user, data.password)
+                .then(() => {
+                    Toast.show({
+                        type: "success",
+                        text1: i18n.t("changesSaved"),
+                    });
+                })
+                .catch((error) => {
+                    Toast.show({
+                        type: "error",
+                        text1: i18n.t("errorOccured"),
+                    });
+                });
+        }
     };
 
     return (
@@ -152,11 +154,6 @@ export default function ProfileScreen({
                 items={items}
                 setOpen={setOpen}
                 setValue={setValue}
-                onChangeValue={(value) => {
-                    if (typeof value === "string") {
-                        i18n.changeLanguage(value);
-                    }
-                }}
                 setItems={setItems}
             />
 

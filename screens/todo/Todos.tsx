@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import {
+    KeyboardAvoidingView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+} from "react-native";
 import { useDispatch } from "react-redux";
 import { Text, View } from "../../components/Themed";
 import { auth, db } from "../../firebase";
@@ -10,6 +15,9 @@ import {
     onSnapshot,
     DocumentData,
     deleteDoc,
+    orderBy,
+    getDocs,
+    addDoc,
 } from "firebase/firestore";
 import Toast from "react-native-toast-message";
 import {
@@ -32,10 +40,12 @@ import {
 } from "./SvgIcons";
 import BottomModal from "./BottomModal";
 import { useTranslation } from "react-i18next";
+import { Todo } from "../../store/classes/todo";
 
 function TodoItem(props: any) {
     const { t, i18n } = useTranslation();
     const [create, setCreate] = useState(false);
+    const [todoTitle, setTodoTitle] = useState("");
     const dispatch = useDispatch();
     const {
         control,
@@ -46,24 +56,6 @@ function TodoItem(props: any) {
             todoTitle: "",
         },
     });
-
-    function deleteTodo(docRef: any) {
-        dispatch(closeConfirmDialog());
-        deleteDoc(docRef)
-            .then(() => {
-                Toast.show({
-                    type: "success",
-                    text1: "Todo is deleted.",
-                });
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-                Toast.show({
-                    type: "error",
-                    text1: errorMessage,
-                });
-            });
-    }
 
     function getIcon(status: number): string | null {
         switch (status) {
@@ -82,6 +74,73 @@ function TodoItem(props: any) {
         }
     }
 
+    function createTodo() {
+        console.log("todoTitle", todoTitle, create);
+
+        if (todoTitle === "") {
+            console.log("todoTitle", todoTitle);
+
+            setCreate(false);
+            return;
+        }
+        var date;
+        var todo;
+        if (props.type === TodoType.SOME_DAY) {
+            todo = new Todo(
+                todoTitle,
+                TodoStatus.NOT_STARTED,
+                TodoType.SOME_DAY
+            );
+        } else if (props.type === TodoType.DAILY) {
+            if (props.isToday) {
+                date = new Date();
+                date.setHours(12, 0, 0, 0);
+            } else {
+                date = new Date();
+                date.setDate(date.getDate() + 1);
+                date.setHours(12, 0, 0, 0);
+            }
+            todo = new Todo(
+                todoTitle,
+                TodoStatus.NOT_STARTED,
+                TodoType.DAILY,
+                date
+            );
+        } else {
+            date = props.date.toDate();
+            todo = new Todo(
+                todoTitle,
+                TodoStatus.NOT_STARTED,
+                TodoType.DAILY,
+                date
+            );
+        }
+        todo.save();
+        setCreate(false);
+        setTodoTitle("");
+
+        date.setHours(0, 0, 0, 0);
+        var dateEnd = new Date(date);
+        dateEnd.setHours(23, 59, 59, 100);
+        const q = query(
+            collection(db, "dates"),
+            where("userId", "==", auth.currentUser?.uid),
+            where("date", "<=", dateEnd),
+            where("date", ">=", date)
+        );
+
+        getDocs(q)
+            .then((querySnapshot) => {
+                if (querySnapshot.docs.length === 0) {
+                    addDoc(collection(db, "dates"), {
+                        date: date,
+                        userId: auth.currentUser?.uid,
+                    });
+                }
+            })
+            .catch((e) => {});
+    }
+
     return (
         <View
             style={{
@@ -90,13 +149,14 @@ function TodoItem(props: any) {
                 borderColor: props.lineColor,
             }}
         >
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={
+                    props.todo.title
+                        ? () => props.onOpen(props.docRef)
+                        : undefined
+                }
+            >
                 <SvgXml
-                    onPress={
-                        props.todo.title
-                            ? () => props.onOpen(props.docRef)
-                            : undefined
-                    }
                     style={{ marginRight: 16 }}
                     xml={getIcon(props.todo.status)}
                 />
@@ -104,7 +164,12 @@ function TodoItem(props: any) {
             {props.todo.title ? <MonoText>{props.todo.title}</MonoText> : null}
             {props.tapToCreate ? (
                 create ? (
-                    <TextInput onChangeText={() => console.log("asda")} />
+                    <TextInput
+                        autoFocus={true}
+                        onChangeText={(value) => setTodoTitle(value)}
+                        onEndEditing={() => createTodo()}
+                        style={{ width: "80%" }}
+                    />
                 ) : (
                     <Text
                         onPress={() => setCreate(true)}
@@ -156,12 +221,15 @@ export default function Todos(props: any) {
         beginningOfTheDay.setHours(0, 0, 0, 0);
         endOfTheDay.setHours(23, 59, 59, 99);
 
-        const q = query(
+        var q = query(
             collection(db, "todo"),
+            where("type", "==", TodoType.DAILY),
             where("userId", "==", auth.currentUser?.uid),
             where("date", ">=", beginningOfTheDay),
-            where("date", "<=", endOfTheDay)
+            where("date", "<=", endOfTheDay),
+            orderBy("date", "asc")
         );
+
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const todoList: any = [];
             querySnapshot.forEach((doc) => {
@@ -185,9 +253,11 @@ export default function Todos(props: any) {
         createdAt.setHours(23, 59, 59, 99);
         const q = query(
             collection(db, "todo"),
+            where("type", "==", TodoType.DAILY),
             where("userId", "==", auth.currentUser?.uid),
             where("date", ">=", props.date.date),
-            where("date", "<", createdAt)
+            where("date", "<", createdAt),
+            orderBy("date", "asc")
         );
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const todoList: any = [];
@@ -212,7 +282,8 @@ export default function Todos(props: any) {
         const q = query(
             collection(db, "todo"),
             where("userId", "==", auth.currentUser?.uid),
-            where("type", "==", TodoType.SOME_DAY)
+            where("type", "==", TodoType.SOME_DAY),
+            orderBy("date", "asc")
         );
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const todoList: any = [];
@@ -251,12 +322,12 @@ export default function Todos(props: any) {
         if (props.date.type === TodoType.DAILY) {
             date = new Date(props.date.date);
             if (props.date.isToday) {
-                setTitle(i18n.t("today"));
+                setTitle("today");
             } else {
-                setTitle(i18n.t("nextDay"));
+                setTitle("nextDay");
             }
         } else if (props.date.type === TodoType.SOME_DAY) {
-            setTitle(i18n.t("someDay"));
+            setTitle("someDay");
             return;
         } else {
             date = props.date.date.toDate();
@@ -276,7 +347,9 @@ export default function Todos(props: any) {
     };
 
     return (
-        <View style={{ ...styles.container, backgroundColor: bgColor }}>
+        <KeyboardAvoidingView
+            style={{ ...styles.container, backgroundColor: bgColor }}
+        >
             <View
                 style={{
                     flex: 0,
@@ -289,7 +362,7 @@ export default function Todos(props: any) {
                     paddingBottom: 20,
                 }}
             >
-                <MonoText style={{ fontSize: 16 }}>{title}</MonoText>
+                <MonoText style={{ fontSize: 16 }}>{i18n.t(title)}</MonoText>
                 <MonoText style={{ fontSize: 16 }}>{date}</MonoText>
             </View>
             {todos &&
@@ -304,18 +377,21 @@ export default function Todos(props: any) {
                             index={index}
                             bgColor={bgColor}
                             lineColor={lineColor}
+                            type={props.date.type}
+                            isToday={props.date.isToday}
+                            date={props.date.date}
                         />
                     );
                 })}
             <Portal>
-                <Modalize modalHeight={420} ref={modalizeRef}>
+                <Modalize modalHeight={490} ref={modalizeRef}>
                     <BottomModal
                         modalizeRef={modalizeRef}
                         docRef={selectedDoc}
                     />
                 </Modalize>
             </Portal>
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 

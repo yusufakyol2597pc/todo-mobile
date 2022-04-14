@@ -18,12 +18,16 @@ import {
     inProgressIcon,
     moveIcon,
 } from "./SvgIcons";
-import { updateDoc } from "firebase/firestore";
+import { deleteDoc, updateDoc } from "firebase/firestore";
 import { TodoStatus } from "../../store/enums/todoStatus";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { closeConfirmDialog } from "../../store/actions/global.actions";
+import Toast from "react-native-toast-message";
 
 export default function BottomModal(props: any) {
     const { t, i18n } = useTranslation();
+    const dispatch = useDispatch();
 
     async function updateDocument(status: TodoStatus) {
         if (!props.docRef || !status) {
@@ -35,6 +39,27 @@ export default function BottomModal(props: any) {
         await updateDoc(props.docRef, {
             status: status,
         });
+    }
+
+    function deleteTodo() {
+        if (!props.docRef) {
+            return;
+        }
+        props.modalizeRef.current?.close();
+        deleteDoc(props.docRef)
+            .then(() => {
+                /*Toast.show({
+                  type: "success",
+                  text1: "Todo is deleted.",
+              });*/
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                Toast.show({
+                    type: "error",
+                    text1: errorMessage,
+                });
+            });
     }
 
     return (
@@ -103,6 +128,14 @@ export default function BottomModal(props: any) {
                     xml={editIcon}
                 />
                 <MonoText>{i18n.t("edit")}</MonoText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.todoItemContainer}
+                onPress={() => deleteTodo()}
+            >
+                <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                <MonoText>{i18n.t("delete")}</MonoText>
             </TouchableOpacity>
         </View>
     );

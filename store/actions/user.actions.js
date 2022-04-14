@@ -8,10 +8,10 @@ export function login(email, password) {
         dispatch({type: SIGNIN_OR_SIGNUP_STARTED})
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            Toast.show({
+            /*Toast.show({
                 type: 'success',
                 text1: userCredential.user.email + ' signed in.'
-            });
+            });*/
         })
         .catch((error) => {
             const errorMessage = error.message;
@@ -30,10 +30,10 @@ export function register(form) {
     return (dispatch, getState, api) => {
         createUserWithEmailAndPassword(auth, form.email, form.pasword)
         .then((userCredential) => {
-            Toast.show({
+            /*Toast.show({
                 type: 'success',
                 text1: 'Signed on.'
-            });
+            });*/
             // ...
         })
         .catch((error) => {

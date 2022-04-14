@@ -12,7 +12,7 @@ export class Todo {
     type: TodoType;
     date: Date;
 
-    constructor(title: string, status: TodoStatus = TodoStatus.NOT_STARTED, type: number = 0, date: Date = new Date()) {
+    constructor(title: string, status: TodoStatus = TodoStatus.NOT_STARTED, type: TodoType = TodoType.DAILY, date: Date = new Date()) {
         this.title = title;
         this.status = status;
         this.type = type;
