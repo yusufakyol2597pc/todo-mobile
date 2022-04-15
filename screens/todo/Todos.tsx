@@ -86,16 +86,15 @@ function TodoItem(props: any) {
             todo = new Todo(
                 todoTitle,
                 TodoStatus.NOT_STARTED,
-                TodoType.SOME_DAY
+                TodoType.SOME_DAY,
+                new Date()
             );
         } else if (props.type === TodoType.DAILY) {
             if (props.isToday) {
                 date = new Date();
-                date.setHours(12, 0, 0, 0);
             } else {
                 date = new Date();
                 date.setDate(date.getDate() + 1);
-                date.setHours(12, 0, 0, 0);
             }
             todo = new Todo(
                 todoTitle,
