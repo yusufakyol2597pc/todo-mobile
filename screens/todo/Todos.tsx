@@ -5,7 +5,6 @@ import {
     TextInput,
     TouchableOpacity,
 } from "react-native";
-import { useDispatch } from "react-redux";
 import { Text, View } from "../../components/Themed";
 import { auth, db } from "../../firebase";
 import {
@@ -18,6 +17,7 @@ import {
     orderBy,
     getDocs,
     addDoc,
+    updateDoc,
 } from "firebase/firestore";
 import Toast from "react-native-toast-message";
 import {
@@ -45,8 +45,9 @@ import { Todo } from "../../store/classes/todo";
 function TodoItem(props: any) {
     const { t, i18n } = useTranslation();
     const [create, setCreate] = useState(false);
-    const [todoTitle, setTodoTitle] = useState("");
-    const dispatch = useDispatch();
+    const [todoTitle, setTodoTitle] = useState(
+        props.todo.title ? props.todo.title : ""
+    );
     const {
         control,
         handleSubmit,
@@ -139,6 +140,21 @@ function TodoItem(props: any) {
         }
     }
 
+    function editTodo() {
+        updateDoc(props.docRef, {
+            title: todoTitle,
+        })
+            .then(() => {})
+            .catch((error) => {
+                const errorMessage = error.message;
+                Toast.show({
+                    type: "error",
+                    text1: errorMessage,
+                });
+            });
+        props.setEditFunc(false);
+    }
+
     return (
         <View
             style={{
@@ -150,7 +166,7 @@ function TodoItem(props: any) {
             <TouchableOpacity
                 onPress={
                     props.todo.title
-                        ? () => props.onOpen(props.docRef)
+                        ? () => props.onOpen(props.docRef, props.id)
                         : undefined
                 }
             >
@@ -159,7 +175,7 @@ function TodoItem(props: any) {
                     xml={getIcon(props.todo.status)}
                 />
             </TouchableOpacity>
-            {props.todo.title ? (
+            {!props.edit && props.todo.title ? (
                 <MonoText
                     style={{
                         fontSize: 18,
@@ -195,6 +211,22 @@ function TodoItem(props: any) {
                         {i18n.t("tapToAddSomething")}
                     </MonoText>
                 )
+            ) : props.edit ? (
+                <TextInput
+                    autoFocus={true}
+                    value={todoTitle}
+                    onChangeText={(value) => {
+                        if (value.length < 30) {
+                            setTodoTitle(value);
+                        }
+                    }}
+                    onEndEditing={() => editTodo()}
+                    style={{
+                        width: "80%",
+                        fontSize: 18,
+                        fontFamily: "pressura-mono",
+                    }}
+                />
             ) : (
                 <Text></Text>
             )}
@@ -211,6 +243,8 @@ export default function Todos(props: any) {
     const [lineColor, setLineColor] = useState("#FFFEFE");
     const [todos, setTodos] = useState([]);
     const [selectedDoc, setSelectedDoc] = useState(null);
+    const [selectedId, setSelectedId] = useState(null);
+    const [edit, setEdit] = useState(false);
     const {
         control,
         handleSubmit,
@@ -319,15 +353,13 @@ export default function Todos(props: any) {
     useEffect(() => {
         setLineColor("#C4C4C4");
         if (props.date.type === TodoType.DAILY) {
-            setDailyTodos();
-            return;
+            return setDailyTodos();
         }
         if (props.date.type === TodoType.SOME_DAY) {
-            setSomeDayTodos();
             setLineColor("#8B816B");
-            return;
+            return setSomeDayTodos();
         }
-        setPreviousTodos();
+        return setPreviousTodos();
     }, []);
 
     useEffect(() => {
@@ -354,9 +386,10 @@ export default function Todos(props: any) {
         );
     }, [props.data]);
 
-    const onOpen = (docRef: any) => {
+    const onOpen = (docRef: any, id: any) => {
         modalizeRef.current?.open();
         setSelectedDoc(docRef);
+        setSelectedId(id);
     };
 
     return (
@@ -387,23 +420,28 @@ export default function Todos(props: any) {
                             tapToCreate={todo.tapToCreate}
                             todo={todo.data ? todo.data() : {}}
                             key={index}
-                            index={index}
+                            id={todo.id}
                             bgColor={bgColor}
                             lineColor={lineColor}
                             type={props.date.type}
                             isToday={props.date.isToday}
                             date={props.date.date}
+                            edit={selectedId == todo.id ? edit : false}
+                            setEditFunc={(e: any) => {
+                                setEdit(e);
+                            }}
                         />
                     );
                 })}
             <Portal>
-                <Modalize modalHeight={490} ref={modalizeRef}>
-                    <BottomModal
-                        modalizeRef={modalizeRef}
-                        docRef={selectedDoc}
-                        cardTitle={title}
-                    />
-                </Modalize>
+                <BottomModal
+                    modalizeRef={modalizeRef}
+                    docRef={selectedDoc}
+                    cardTitle={title}
+                    setEditFunc={(e: any) => {
+                        setEdit(e);
+                    }}
+                />
             </Portal>
         </KeyboardAvoidingView>
     );

@@ -24,14 +24,19 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { closeConfirmDialog } from "../../store/actions/global.actions";
 import Toast from "react-native-toast-message";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TodoType } from "../../store/enums/todoType";
 import { managePanProps } from "react-native-gesture-handler/lib/typescript/handlers/PanGestureHandler";
+import { Modalize } from "react-native-modalize";
 
 export default function BottomModal(props: any) {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const [isMove, setIsMove] = useState(false);
+
+    useEffect(() => {
+        setIsMove(false);
+    }, []);
 
     async function updateDocument(status: TodoStatus) {
         if (!props.docRef || !status) {
@@ -107,131 +112,164 @@ export default function BottomModal(props: any) {
     }
 
     if (isMove) {
+        var modalHeight = 80;
+        if (props.cardTitle !== "nextDay") {
+            modalHeight += 80;
+        }
+        if (props.cardTitle !== "someDay") {
+            modalHeight += 80;
+        }
         return (
-            <View style={styles.container}>
-                {props.cardTitle !== "nextDay" && (
+            <Modalize
+                modalHeight={modalHeight}
+                ref={props.modalizeRef}
+                handlePosition="inside"
+                onClosed={() => {
+                    setIsMove(false);
+                }}
+            >
+                <View style={styles.container}>
+                    {props.cardTitle !== "nextDay" && (
+                        <TouchableOpacity
+                            style={styles.todoItemContainer}
+                            onPress={() => moveToNextDay()}
+                        >
+                            <SvgXml
+                                style={{ marginRight: 16 }}
+                                xml={editIcon}
+                            />
+                            <MonoText style={styles.title}>
+                                {i18n.t("moveNextDay")}
+                            </MonoText>
+                        </TouchableOpacity>
+                    )}
+
+                    {props.cardTitle !== "someDay" && (
+                        <TouchableOpacity
+                            style={styles.todoItemContainer}
+                            onPress={() => moveToSomeDay()}
+                        >
+                            <SvgXml
+                                style={{ marginRight: 16 }}
+                                xml={editIcon}
+                            />
+                            <MonoText style={styles.title}>
+                                {i18n.t("moveSomeDay")}
+                            </MonoText>
+                        </TouchableOpacity>
+                    )}
+
                     <TouchableOpacity
                         style={styles.todoItemContainer}
-                        onPress={() => moveToNextDay()}
+                        onPress={() => setIsMove(false)}
                     >
                         <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
-                        <MonoText>{i18n.t("moveNextDay")}</MonoText>
+                        <MonoText style={styles.title}>
+                            {i18n.t("back")}
+                        </MonoText>
                     </TouchableOpacity>
-                )}
-
-                {props.cardTitle !== "someDay" && (
-                    <TouchableOpacity
-                        style={styles.todoItemContainer}
-                        onPress={() => moveToSomeDay()}
-                    >
-                        <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
-                        <MonoText>{i18n.t("moveSomeDay")}</MonoText>
-                    </TouchableOpacity>
-                )}
-
-                <TouchableOpacity
-                    style={styles.todoItemContainer}
-                    onPress={() => setIsMove(false)}
-                >
-                    <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
-                    <MonoText>{i18n.t("back")}</MonoText>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </Modalize>
         );
     }
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity
-                style={styles.todoItemContainer}
-                onPress={() => updateDocument(TodoStatus.COMPLETED)}
-            >
-                <SvgXml
-                    onPress={props.onOpen}
-                    style={{ marginRight: 16 }}
-                    xml={completedIcon}
-                />
-                <MonoText>{i18n.t("complete")}</MonoText>
-            </TouchableOpacity>
+        <Modalize
+            modalHeight={490}
+            ref={props.modalizeRef}
+            handlePosition="inside"
+            onClosed={() => {
+                setIsMove(false);
+                //props.setEditFunc(false);
+            }}
+        >
+            <View style={styles.container}>
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => updateDocument(TodoStatus.COMPLETED)}
+                >
+                    <SvgXml
+                        onPress={props.onOpen}
+                        style={{ marginRight: 16 }}
+                        xml={completedIcon}
+                    />
+                    <MonoText style={styles.title}>
+                        {i18n.t("complete")}
+                    </MonoText>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.todoItemContainer}
-                onPress={() => updateDocument(TodoStatus.IN_PROGRESS)}
-            >
-                <SvgXml
-                    onPress={props.onOpen}
-                    style={{ marginRight: 16 }}
-                    xml={inProgressIcon}
-                />
-                <MonoText>{i18n.t("inProgress")}</MonoText>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => updateDocument(TodoStatus.IN_PROGRESS)}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={inProgressIcon} />
+                    <MonoText style={styles.title}>
+                        {i18n.t("inProgress")}
+                    </MonoText>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.todoItemContainer}
-                onPress={() => updateDocument(TodoStatus.DELEGATED)}
-            >
-                <SvgXml
-                    onPress={props.onOpen}
-                    style={{ marginRight: 16 }}
-                    xml={delegateIcon}
-                />
-                <MonoText>{i18n.t("delegated")}</MonoText>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => updateDocument(TodoStatus.DELEGATED)}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={delegateIcon} />
+                    <MonoText style={styles.title}>
+                        {i18n.t("delegated")}
+                    </MonoText>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.todoItemContainer}
-                onPress={() => updateDocument(TodoStatus.APPOINTMENT)}
-            >
-                <SvgXml
-                    onPress={props.onOpen}
-                    style={{ marginRight: 16 }}
-                    xml={appointmentIcon}
-                />
-                <MonoText>{i18n.t("appointment")}</MonoText>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => updateDocument(TodoStatus.APPOINTMENT)}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={appointmentIcon} />
+                    <MonoText style={styles.title}>
+                        {i18n.t("appointment")}
+                    </MonoText>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.todoItemContainer}
-                onPress={() => setIsMove(true)}
-            >
-                <SvgXml
-                    onPress={props.onOpen}
-                    style={{ marginRight: 16 }}
-                    xml={moveIcon}
-                />
-                <MonoText>{i18n.t("move")}</MonoText>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => setIsMove(true)}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={moveIcon} />
+                    <MonoText style={styles.title}>{i18n.t("move")}</MonoText>
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.todoItemContainer}>
-                <SvgXml
-                    onPress={props.onOpen}
-                    style={{ marginRight: 16 }}
-                    xml={editIcon}
-                />
-                <MonoText>{i18n.t("edit")}</MonoText>
-            </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => {
+                        props.setEditFunc(true);
+                        props.modalizeRef.current?.close();
+                    }}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                    <MonoText style={styles.title}>{i18n.t("edit")}</MonoText>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.todoItemContainer}
-                onPress={() => deleteTodo()}
-            >
-                <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
-                <MonoText>{i18n.t("delete")}</MonoText>
-            </TouchableOpacity>
-        </View>
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => deleteTodo()}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                    <MonoText style={styles.title}>{i18n.t("delete")}</MonoText>
+                </TouchableOpacity>
+            </View>
+        </Modalize>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: "#F6F6F6",
         paddingLeft: 16,
-        paddingVertical: 32,
+        paddingVertical: 16,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
     title: {
-        fontSize: 20,
-        fontWeight: "bold",
+        fontSize: 16,
     },
     separator: {
         marginVertical: 30,
@@ -244,7 +282,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
         borderBottomWidth: 0.3,
         borderColor: "#C4C4C4",
-        paddingVertical: 20,
+        paddingVertical: 22,
     },
     button: {
         marginBottom: 4,
