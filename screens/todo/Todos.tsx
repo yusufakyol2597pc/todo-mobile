@@ -41,6 +41,7 @@ import {
 import BottomModal from "./BottomModal";
 import { useTranslation } from "react-i18next";
 import { Todo } from "../../store/classes/todo";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 function TodoItem(props: any) {
     const { t, i18n } = useTranslation();
@@ -160,6 +161,8 @@ function TodoItem(props: any) {
                 ...styles.todoItemContainer,
                 backgroundColor: props.bgColor,
                 borderColor: props.lineColor,
+                // bugfix workaround
+                borderTopWidth: props.index == 6 ? 0.3 : 0,
             }}
         >
             <TouchableOpacity
@@ -392,9 +395,7 @@ export default function Todos(props: any) {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={{ ...styles.container, backgroundColor: bgColor }}
-        >
+        <View style={{ ...styles.container, backgroundColor: bgColor }}>
             <View
                 style={{
                     flex: 0,
@@ -410,28 +411,31 @@ export default function Todos(props: any) {
                 <MonoText style={{ fontSize: 16 }}>{i18n.t(title)}</MonoText>
                 <MonoText style={{ fontSize: 16 }}>{date}</MonoText>
             </View>
-            {todos &&
-                todos.map((todo: any, index: number) => {
-                    return (
-                        <TodoItem
-                            onOpen={onOpen}
-                            docRef={todo.ref}
-                            tapToCreate={todo.tapToCreate}
-                            todo={todo.data ? todo.data() : {}}
-                            key={index}
-                            id={todo.id}
-                            bgColor={bgColor}
-                            lineColor={lineColor}
-                            type={props.date.type}
-                            isToday={props.date.isToday}
-                            date={props.date.date}
-                            edit={selectedId == todo.id ? edit : false}
-                            setEditFunc={(e: any) => {
-                                setEdit(e);
-                            }}
-                        />
-                    );
-                })}
+            <KeyboardAwareScrollView>
+                {todos &&
+                    todos.map((todo: any, index: number) => {
+                        return (
+                            <TodoItem
+                                onOpen={onOpen}
+                                docRef={todo.ref}
+                                tapToCreate={todo.tapToCreate}
+                                todo={todo.data ? todo.data() : {}}
+                                key={index}
+                                index={index}
+                                id={todo.id}
+                                bgColor={bgColor}
+                                lineColor={lineColor}
+                                type={props.date.type}
+                                isToday={props.date.isToday}
+                                date={props.date.date}
+                                edit={selectedId == todo.id ? edit : false}
+                                setEditFunc={(e: any) => {
+                                    setEdit(e);
+                                }}
+                            />
+                        );
+                    })}
+            </KeyboardAwareScrollView>
             <Portal>
                 <BottomModal
                     modalizeRef={modalizeRef}
@@ -442,7 +446,7 @@ export default function Todos(props: any) {
                     }}
                 />
             </Portal>
-        </KeyboardAvoidingView>
+        </View>
     );
 }
 
@@ -466,7 +470,7 @@ const styles = StyleSheet.create({
         width: "100%",
         paddingHorizontal: 4,
         borderBottomWidth: 0.3,
-        paddingVertical: 20,
+        paddingVertical: 19,
     },
     button: {
         marginBottom: 4,

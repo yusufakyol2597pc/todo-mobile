@@ -17,6 +17,9 @@ import {
     editIcon,
     inProgressIcon,
     moveIcon,
+    moveSomeDayIcon,
+    moveTodayIcon,
+    moveToNextIcon,
 } from "./SvgIcons";
 import { deleteDoc, updateDoc } from "firebase/firestore";
 import { TodoStatus } from "../../store/enums/todoStatus";
@@ -71,6 +74,26 @@ export default function BottomModal(props: any) {
             });
     }
 
+    function moveToday() {
+        if (!props.docRef) {
+            return;
+        }
+        props.modalizeRef.current?.close();
+        var date = new Date();
+        updateDoc(props.docRef, {
+            type: TodoType.DAILY,
+            date: date,
+        })
+            .then(() => {})
+            .catch((error) => {
+                const errorMessage = error.message;
+                Toast.show({
+                    type: "error",
+                    text1: errorMessage,
+                });
+            });
+    }
+
     function moveToNextDay() {
         if (!props.docRef) {
             return;
@@ -78,7 +101,6 @@ export default function BottomModal(props: any) {
         props.modalizeRef.current?.close();
         var date = new Date();
         date.setDate(date.getDate() + 1);
-        date.setHours(12, 0, 0, 0);
         updateDoc(props.docRef, {
             type: TodoType.DAILY,
             date: date,
@@ -113,15 +135,9 @@ export default function BottomModal(props: any) {
 
     if (isMove) {
         var modalHeight = 80;
-        if (props.cardTitle !== "nextDay") {
-            modalHeight += 80;
-        }
-        if (props.cardTitle !== "someDay") {
-            modalHeight += 80;
-        }
         return (
             <Modalize
-                modalHeight={modalHeight}
+                modalHeight={240}
                 ref={props.modalizeRef}
                 handlePosition="inside"
                 onClosed={() => {
@@ -129,6 +145,22 @@ export default function BottomModal(props: any) {
                 }}
             >
                 <View style={styles.container}>
+                    {(props.cardTitle === "nextDay" ||
+                        props.cardTitle === "someDay") && (
+                        <TouchableOpacity
+                            style={styles.todoItemContainer}
+                            onPress={() => moveToday()}
+                        >
+                            <SvgXml
+                                style={{ marginRight: 16 }}
+                                xml={moveTodayIcon}
+                            />
+                            <MonoText style={styles.title}>
+                                {i18n.t("moveToday")}
+                            </MonoText>
+                        </TouchableOpacity>
+                    )}
+
                     {props.cardTitle !== "nextDay" && (
                         <TouchableOpacity
                             style={styles.todoItemContainer}
@@ -136,7 +168,7 @@ export default function BottomModal(props: any) {
                         >
                             <SvgXml
                                 style={{ marginRight: 16 }}
-                                xml={editIcon}
+                                xml={moveToNextIcon}
                             />
                             <MonoText style={styles.title}>
                                 {i18n.t("moveNextDay")}
@@ -151,7 +183,7 @@ export default function BottomModal(props: any) {
                         >
                             <SvgXml
                                 style={{ marginRight: 16 }}
-                                xml={editIcon}
+                                xml={moveSomeDayIcon}
                             />
                             <MonoText style={styles.title}>
                                 {i18n.t("moveSomeDay")}
@@ -163,9 +195,9 @@ export default function BottomModal(props: any) {
                         style={styles.todoItemContainer}
                         onPress={() => setIsMove(false)}
                     >
-                        <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                        <SvgXml style={{ marginRight: 16 }} xml={cancelIcon} />
                         <MonoText style={styles.title}>
-                            {i18n.t("back")}
+                            {i18n.t("cancel")}
                         </MonoText>
                     </TouchableOpacity>
                 </View>
@@ -251,7 +283,7 @@ export default function BottomModal(props: any) {
                     style={styles.todoItemContainer}
                     onPress={() => deleteTodo()}
                 >
-                    <SvgXml style={{ marginRight: 16 }} xml={editIcon} />
+                    <SvgXml style={{ marginRight: 16 }} xml={cancelIcon} />
                     <MonoText style={styles.title}>{i18n.t("delete")}</MonoText>
                 </TouchableOpacity>
             </View>

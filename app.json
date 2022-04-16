@@ -22,7 +22,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "UIUserInterfaceStyle": "Light"
-      }
+      },
+      "bundleIdentifier": "com.akyoldanismanlik.digital"
     },
     "android": {
       "adaptiveIcon": {

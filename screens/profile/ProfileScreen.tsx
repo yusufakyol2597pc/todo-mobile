@@ -10,6 +10,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from "react-native";
 import { MonoText } from "../../components/StyledText";
 import { auth } from "../../firebase";
@@ -20,6 +22,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import * as Localization from "expo-localization";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const enIcon = require("../../assets/images/en.png");
 const trIcon = require("../../assets/images/tr-TR.png");
@@ -97,103 +100,109 @@ export default function ProfileScreen({
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-            <MonoText
-                style={{
-                    fontSize: 16,
-                    marginBottom: 24,
-                    alignSelf: "flex-start",
-                }}
-            >
-                {i18n.t("profile")}
-            </MonoText>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAwareScrollView style={styles.container}>
+                <MonoText
+                    style={{
+                        fontSize: 16,
+                        marginBottom: 24,
+                        color: "#38383A",
+                        fontWeight: "400",
+                    }}
+                >
+                    {i18n.t("profile")}
+                </MonoText>
 
-            <View style={{ marginBottom: 24 }}>
-                <MonoText style={{ marginBottom: 6 }}>Email</MonoText>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        value={auth.currentUser?.email}
-                        editable={false}
+                <View style={{ marginBottom: 24 }}>
+                    <MonoText style={{ marginBottom: 3 }}>Email</MonoText>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.input}
+                            value={auth.currentUser?.email}
+                            editable={false}
+                        />
+                    </View>
+                </View>
+
+                <View style={{ marginBottom: 24 }}>
+                    <MonoText style={{ marginBottom: 3 }}>
+                        {i18n.t("password")}
+                    </MonoText>
+                    <CustomizedInput
+                        name="password"
+                        secureTextEntry={true}
+                        control={control}
+                        borderColor="#C4C4C4"
                     />
                 </View>
-            </View>
 
-            <View style={{ marginBottom: 24 }}>
-                <MonoText style={{ marginBottom: 6 }}>
-                    {i18n.t("password")}
-                </MonoText>
-                <CustomizedInput
-                    name="password"
-                    secureTextEntry={true}
-                    control={control}
-                    borderColor="#C4C4C4"
-                />
-            </View>
-
-            <View style={{ marginBottom: 24 }}>
-                <MonoText style={{ marginBottom: 6 }}>
-                    {i18n.t("confirmPassword")}
-                </MonoText>
-                <CustomizedInput
-                    name="confirm_password"
-                    secureTextEntry={true}
-                    control={control}
-                    borderColor="#C4C4C4"
-                />
-            </View>
-
-            <MonoText style={{ marginBottom: 6, alignSelf: "flex-start" }}>
-                {i18n.t("language")}
-            </MonoText>
-            <DropDownPicker
-                placeholder={i18n.t("selectLang")}
-                style={{ marginBottom: 24, borderColor: "#C4C4C4" }}
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setItems={setItems}
-            />
-
-            <View style={{ paddingHorizontal: 16, width: "100%" }}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleSubmit(onSubmit)}
-                >
-                    <MonoText style={{ color: "white", fontSize: 14 }}>
-                        {i18n.t("saveChanges")}
+                <View style={{ marginBottom: 24 }}>
+                    <MonoText style={{ marginBottom: 3 }}>
+                        {i18n.t("confirmPassword")}
                     </MonoText>
-                </TouchableOpacity>
-            </View>
+                    <CustomizedInput
+                        name="confirm_password"
+                        secureTextEntry={true}
+                        control={control}
+                        borderColor="#C4C4C4"
+                    />
+                </View>
 
-            <View style={styles.line} />
+                <MonoText style={{ marginBottom: 3, alignSelf: "flex-start" }}>
+                    {i18n.t("language")}
+                </MonoText>
+                <DropDownPicker
+                    placeholder={i18n.t("selectLang")}
+                    style={{ marginBottom: 24, borderColor: "#C4C4C4" }}
+                    open={open}
+                    value={value}
+                    items={items}
+                    setOpen={setOpen}
+                    setValue={setValue}
+                    setItems={setItems}
+                />
 
-            <MonoText style={{ marginBottom: 16, alignSelf: "flex-start" }}>
-                {i18n.t("terms")}
-            </MonoText>
-            <MonoText style={{ alignSelf: "flex-start" }}>
-                {i18n.t("privacy")}
-            </MonoText>
+                <View style={{ paddingHorizontal: 16, width: "100%" }}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleSubmit(onSubmit)}
+                    >
+                        <MonoText style={{ color: "white", fontSize: 14 }}>
+                            {i18n.t("saveChanges")}
+                        </MonoText>
+                    </TouchableOpacity>
+                </View>
 
-            <View style={styles.line} />
+                <View style={styles.line} />
 
-            <MonoText
-                style={{ textDecorationLine: "underline" }}
-                onPress={() => {
-                    signOut(auth)
-                        .then(() => {
-                            // Sign-out successful.
-                        })
-                        .catch((error) => {
-                            // An error happened.
-                        });
-                }}
-            >
-                {i18n.t("logout")}
-            </MonoText>
-        </KeyboardAvoidingView>
+                <MonoText style={{ marginBottom: 16, alignSelf: "flex-start" }}>
+                    {i18n.t("terms")}
+                </MonoText>
+                <MonoText style={{ alignSelf: "flex-start" }}>
+                    {i18n.t("privacy")}
+                </MonoText>
+
+                <View style={styles.line} />
+
+                <MonoText
+                    style={{
+                        textDecorationLine: "underline",
+                        alignSelf: "center",
+                    }}
+                    onPress={() => {
+                        signOut(auth)
+                            .then(() => {
+                                // Sign-out successful.
+                            })
+                            .catch((error) => {
+                                // An error happened.
+                            });
+                    }}
+                >
+                    {i18n.t("logout")}
+                </MonoText>
+            </KeyboardAwareScrollView>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -203,7 +212,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFFEFE",
         paddingHorizontal: 16,
         paddingTop: 72,
-        alignItems: "center",
     },
     button: {
         width: "100%",
