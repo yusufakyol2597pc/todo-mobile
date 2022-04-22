@@ -27,7 +27,7 @@
     "moveSomeDay": "Move To Some Day",
     "cancel": "Cancel",
     "restMode": "Rest Mode",
-    "focusMode": "Focus Modes" ,
+    "focusMode": "Focus Mode" ,
     "start": "Start",
     "remTime": "{{minutes}} minutes and {{seconds}} seconds left",
     "today": "Today",
@@ -37,6 +37,9 @@
     "terms": "Terms of Use",
     "privacy": "Privacy and Policy",
     "selectLang": "Select a language",
+    "stop": "Stop",
+    "holdToReset": "Hold to reset",
+    "resume": "Resume",
     "language": "Language",
     "english": "English",
     "turkish": "Turkish"

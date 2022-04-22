@@ -5,11 +5,12 @@ import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const focusTime = 20 * 60;
+const focusTime = 25 * 60;
 const restTime = 5 * 60;
 
 export default function Timer() {
     const { t, i18n } = useTranslation();
+    const [isPlaying, setIsPlaying] = useState(undefined);
     const [duration, setDuration] = useState(focusTime);
     const [remTime, setRemTime] = useState(focusTime);
     const [phase, setPhase] = useState(0);
@@ -32,7 +33,13 @@ export default function Timer() {
                 ></View>
                 <CountdownCircleTimer
                     key={key}
-                    isPlaying={phase === 0 ? false : true}
+                    isPlaying={
+                        isPlaying === undefined
+                            ? phase === 0
+                                ? false
+                                : true
+                            : isPlaying
+                    }
                     duration={duration}
                     trailColor="#B52C46"
                     colors="#E5E5E5"
@@ -48,13 +55,68 @@ export default function Timer() {
                     }}
                 >
                     {({ remainingTime }) => {
-                        setRemTime(remainingTime);
+                        if (isPlaying === false) {
+                            return (
+                                <View style={{ alignItems: "center" }}>
+                                    <TouchableOpacity
+                                        onPress={() => setIsPlaying(true)}
+                                        onLongPress={() => {
+                                            setPhase(0);
+                                            setDuration(focusTime);
+                                            setRemTime(focusTime);
+                                            setIsPlaying(undefined);
+                                            setKey((prevKey) => prevKey + 1);
+                                        }}
+                                    >
+                                        <MonoText
+                                            style={{
+                                                fontSize: 18,
+                                                color: "#38383A",
+                                                fontWeight: "400",
+                                            }}
+                                        >
+                                            {i18n.t("resume")}
+                                        </MonoText>
+                                    </TouchableOpacity>
+                                </View>
+                            );
+                        }
+                        if (isPlaying === true) {
+                            setRemTime(remainingTime);
+                            return (
+                                <View style={{ alignItems: "center" }}>
+                                    <TouchableOpacity
+                                        onPress={() => setIsPlaying(false)}
+                                        onLongPress={() => {
+                                            setPhase(0);
+                                            setDuration(focusTime);
+                                            setRemTime(focusTime);
+                                            setIsPlaying(undefined);
+                                            setKey((prevKey) => prevKey + 1);
+                                        }}
+                                    >
+                                        <MonoText
+                                            style={{
+                                                fontSize: 18,
+                                                color: "#38383A",
+                                                fontWeight: "400",
+                                            }}
+                                        >
+                                            {i18n.t("stop")}
+                                        </MonoText>
+                                    </TouchableOpacity>
+                                </View>
+                            );
+                        }
                         if (phase == 0) {
+                            setRemTime(remainingTime);
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
                                         setDuration(focusTime);
                                         setPhase(1);
+                                        setIsPlaying(true);
+                                        setKey((prevKey) => prevKey + 1);
                                     }}
                                 >
                                     <MonoText
@@ -70,15 +132,17 @@ export default function Timer() {
                             );
                         }
                         return (
-                            <MonoText
-                                style={{
-                                    fontSize: 18,
-                                    color: "#38383A",
-                                    fontWeight: "400",
-                                }}
-                            >
-                                Digital
-                            </MonoText>
+                            <View style={{ alignItems: "center" }}>
+                                <MonoText
+                                    style={{
+                                        fontSize: 18,
+                                        color: "#38383A",
+                                        fontWeight: "400",
+                                    }}
+                                >
+                                    Digital
+                                </MonoText>
+                            </View>
                         );
                     }}
                 </CountdownCircleTimer>

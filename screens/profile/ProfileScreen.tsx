@@ -38,6 +38,7 @@ export default function ProfileScreen({
         control,
         handleSubmit,
         formState: { errors },
+        getValues,
     } = useForm({
         defaultValues: {
             email: "",
@@ -68,8 +69,8 @@ export default function ProfileScreen({
         ];
     }
 
-    const onSubmit = (data) => {
-        console.log("data", data);
+    const onSubmit = (data: any) => {
+        console.log("data", data, value);
         i18n.changeLanguage(value);
         if (data.password.length > 0) {
             if (data.password !== data.confirm_password) {
@@ -165,7 +166,14 @@ export default function ProfileScreen({
                 <View style={{ paddingHorizontal: 16, width: "100%" }}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={handleSubmit(onSubmit)}
+                        onPress={
+                            getValues("password") === "" &&
+                            getValues("confirm_password") === ""
+                                ? () => {
+                                      i18n.changeLanguage(value);
+                                  }
+                                : handleSubmit(onSubmit)
+                        }
                     >
                         <MonoText style={{ color: "white", fontSize: 14 }}>
                             {i18n.t("saveChanges")}
@@ -188,6 +196,7 @@ export default function ProfileScreen({
                     style={{
                         textDecorationLine: "underline",
                         alignSelf: "center",
+                        marginBottom: 144,
                     }}
                     onPress={() => {
                         signOut(auth)

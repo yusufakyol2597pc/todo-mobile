@@ -29,8 +29,8 @@ import { closeConfirmDialog } from "../../store/actions/global.actions";
 import Toast from "react-native-toast-message";
 import { useEffect, useState } from "react";
 import { TodoType } from "../../store/enums/todoType";
-import { managePanProps } from "react-native-gesture-handler/lib/typescript/handlers/PanGestureHandler";
 import { Modalize } from "react-native-modalize";
+import { TodoDay } from "../../store/enums/todoDay";
 
 export default function BottomModal(props: any) {
     const { t, i18n } = useTranslation();
@@ -48,9 +48,17 @@ export default function BottomModal(props: any) {
 
         props.modalizeRef.current?.close();
 
-        await updateDoc(props.docRef, {
+        updateDoc(props.docRef, {
             status: status,
-        });
+        })
+            .then(() => {})
+            .catch((error) => {
+                const errorMessage = error.message;
+                Toast.show({
+                    type: "error",
+                    text1: errorMessage,
+                });
+            });
     }
 
     function deleteTodo() {
@@ -134,7 +142,6 @@ export default function BottomModal(props: any) {
     }
 
     if (isMove) {
-        var modalHeight = 80;
         return (
             <Modalize
                 modalHeight={240}
@@ -145,8 +152,8 @@ export default function BottomModal(props: any) {
                 }}
             >
                 <View style={styles.container}>
-                    {(props.cardTitle === "nextDay" ||
-                        props.cardTitle === "someDay") && (
+                    {(props.day === TodoDay.NEXT_DAY ||
+                        props.day === TodoDay.SOME_DAY) && (
                         <TouchableOpacity
                             style={styles.todoItemContainer}
                             onPress={() => moveToday()}
@@ -161,7 +168,7 @@ export default function BottomModal(props: any) {
                         </TouchableOpacity>
                     )}
 
-                    {props.cardTitle !== "nextDay" && (
+                    {props.day !== TodoDay.NEXT_DAY && (
                         <TouchableOpacity
                             style={styles.todoItemContainer}
                             onPress={() => moveToNextDay()}
@@ -176,7 +183,7 @@ export default function BottomModal(props: any) {
                         </TouchableOpacity>
                     )}
 
-                    {props.cardTitle !== "someDay" && (
+                    {props.day !== TodoDay.SOME_DAY && (
                         <TouchableOpacity
                             style={styles.todoItemContainer}
                             onPress={() => moveToSomeDay()}
@@ -207,7 +214,7 @@ export default function BottomModal(props: any) {
 
     return (
         <Modalize
-            modalHeight={490}
+            modalHeight={props.day === TodoDay.PREVIOUS ? 420 : 490}
             ref={props.modalizeRef}
             handlePosition="inside"
             onClosed={() => {
@@ -279,13 +286,17 @@ export default function BottomModal(props: any) {
                     <MonoText style={styles.title}>{i18n.t("edit")}</MonoText>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={styles.todoItemContainer}
-                    onPress={() => deleteTodo()}
-                >
-                    <SvgXml style={{ marginRight: 16 }} xml={cancelIcon} />
-                    <MonoText style={styles.title}>{i18n.t("delete")}</MonoText>
-                </TouchableOpacity>
+                {props.day !== TodoDay.PREVIOUS && (
+                    <TouchableOpacity
+                        style={styles.todoItemContainer}
+                        onPress={() => deleteTodo()}
+                    >
+                        <SvgXml style={{ marginRight: 16 }} xml={cancelIcon} />
+                        <MonoText style={styles.title}>
+                            {i18n.t("delete")}
+                        </MonoText>
+                    </TouchableOpacity>
+                )}
             </View>
         </Modalize>
     );

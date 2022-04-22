@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "todo-mobile",
+    "name": "Digital",
     "slug": "todo-mobile",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/Icon-App-1024x1024.png",
     "scheme": "myapp",
     "userInterfaceStyle": "light",
     "splash": {

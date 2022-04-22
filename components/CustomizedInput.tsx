@@ -3,7 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "./Themed";
 import { SvgXml } from "react-native-svg";
-import { deleteIcon, eyeIcon } from "../screens/login/SvgIcons";
+import {
+    closedEyeIcon,
+    deleteIcon,
+    openEyeIcon,
+} from "../screens/login/SvgIcons";
 import { useState } from "react";
 
 export function CustomizedInput(props: any) {
@@ -70,7 +74,13 @@ export function CustomizedInput(props: any) {
                                         )
                                     }
                                 >
-                                    <SvgXml xml={eyeIcon} />
+                                    <SvgXml
+                                        xml={
+                                            secureTextEntry
+                                                ? closedEyeIcon
+                                                : openEyeIcon
+                                        }
+                                    />
                                 </TouchableOpacity>
                             ) : null}
                         </View>
