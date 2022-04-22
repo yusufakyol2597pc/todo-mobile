@@ -65,9 +65,19 @@ function TodoItem(props: any) {
     });
 
     useState(() => {
-        setTodoTitle(props.todo.title ? props.todo.title : "");
-        setTodoTitleBackup(props.todo.title ? props.todo.title : "");
-    }, [props.id]);
+        if (props.tapToCreate) {
+            setTodoTitle("");
+            setTodoTitleBackup("");
+            return;
+        }
+        if (props.todo.title) {
+            setTodoTitle(props.todo.title);
+            setTodoTitleBackup(props.todo.title);
+        } else {
+            setTodoTitle("");
+            setTodoTitleBackup("");
+        }
+    }, [props]);
 
     function getIcon(status: number): string | null {
         switch (status) {
@@ -449,7 +459,7 @@ export default function Todos(props: any) {
                     todos.map((todo: any, index: number) => {
                         return (
                             <View
-                                key={index}
+                                key={Math.floor(Math.random() * 10000000000)}
                                 style={{
                                     ...styles.todoItemContainer,
                                     backgroundColor: props.bgColor,
