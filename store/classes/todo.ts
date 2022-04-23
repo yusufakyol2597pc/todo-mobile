@@ -19,16 +19,14 @@ export class Todo {
         this.date = date;
     }
 
-    save() {
+    async save() {
         // Add a new document with a generated id
-        addDoc(collection(db, "todo"), {
+        return addDoc(collection(db, "todo"), {
             title: this.title,
             status: this.status,
             type: this.type,
             date: this.date,
             userId: auth.currentUser?.uid,
         })
-        .then(() => {
-        });
     }
 }

@@ -13,7 +13,193 @@ export default function Texts(props: any) {
         var modalHeight = 80;
         return (
             <View style={styles.container}>
-                <Text>Privacy</Text>
+                <Text style={styles.title}>
+                    Digital: Minimalist To-do App | Privacy Policy
+                </Text>
+                <Text style={styles.paragraf}>
+                    This Privacy Policy describes the policies and procedures of
+                    Digital: Minimalist To-do App ("we" or "us") on the
+                    collection, use and disclosure of your information on the
+                    Digital: Minimalist To-do App mobile application and the
+                    related services, features, content or applications in
+                    connection therewith (collectively, "Digital: Minimalist
+                    To-do App"). In connection with your use of Digital:
+                    Minimalist To-do App, we receive information about you from
+                    various sources, including: (i) through your Digital:
+                    Minimalist To-do App user account (your "Account"); (ii)
+                    your use of Digital: Minimalist To-do App generally; and
+                    (iii) from third party websites and services. When you use
+                    Digital: Minimalist To-do App, you are consenting to the
+                    collection, transfer, manipulation, storage, transmission,
+                    disclosure and other uses of your information as described
+                    in this Privacy Policy.
+                </Text>
+
+                <Text style={styles.subTitle}>
+                    What Does This Privacy Policy Cover?
+                </Text>
+                <Text style={styles.paragraf}>
+                    This Privacy Policy covers the treatment of personally
+                    identifiable information ("Personal Information") we gather
+                    when you are using or accessing Digital: Minimalist To-do
+                    App. This Privacy Policy also covers our treatment of any
+                    Personal Information that our business partners share with
+                    us or that we share with our business partners. This Privacy
+                    Policy does not apply to the practices of third parties that
+                    we do not own or control, including but not limited to any
+                    third party websites, content sources, services and
+                    applications ("Third Party Services") that you elect to
+                    access through Digital: Minimalist To-do App, or to
+                    individuals that we do not manage or employ. While we
+                    attempt to facilitate access only to those Third Party
+                    Services that share our respect for your privacy, we cannot
+                    take responsibility for the content or privacy policies of
+                    those Third Party Services. We encourage you to carefully
+                    review the privacy policies of any Third Party Services you
+                    access.
+                </Text>
+                <Text style={styles.subTitle}>
+                    What Information Is Collected by Digital: Minimalist To-do
+                    App?
+                </Text>
+                <Text style={styles.paragraf}>
+                    The information we gather enables us to personalize, improve
+                    and continue to operate Digital: Minimalist To-do App. In
+                    connection with certain aspects of Digital: Minimalist To-do
+                    App, we may request, collect and/or display some of your
+                    Personal Information. We collect the following types of
+                    information from our users.
+                </Text>
+                <Text style={styles.subTitle}>User Content:</Text>
+                <Text style={styles.paragraf}>
+                    Digital: Minimalist To-do App allows you to provide content
+                    to Digital: Minimalist To-do App. All content submitted by
+                    you to Digital: Minimalist To-do App will be retained by us
+                    indefinitely, unless you delete your account.
+                </Text>
+                <Text style={styles.subTitle}>Aggregate Information:</Text>
+                <Text style={styles.paragraf}>
+                    We collect statistical information about how people use
+                    Digital: Minimalist To-do App ("Aggregate Information").
+                    Some of this information is derived from Personal
+                    Information, such as your location (which, in turn, can be
+                    derived from your IP address or through location based
+                    services used by your device). This statistical information
+                    is not Personal Information and cannot be tied back to you,
+                    your Account or your Digital: Minimalist To-do App.
+                </Text>
+                <Text style={styles.subTitle}>
+                    How and To Whom Is My Information Shared?
+                </Text>
+                <Text style={styles.subTitle}>
+                    Information You Elect to Share:
+                </Text>
+                <Text style={styles.paragraf}>
+                    You may access Third Party Services through Digital:
+                    Minimalist To-do App, for example by clicking on links to
+                    those Third Party Services from Digital: Minimalist To-do
+                    App. We are not responsible for the privacy policies and/or
+                    practices of these Third Party Services, and you are
+                    responsible for reading and understanding those privacy
+                    policies. This Privacy Policy only governs information
+                    collected on or through Digital: Minimalist To-do App.
+                </Text>
+                <Text style={styles.subTitle}>Aggregate Information:</Text>
+                <Text style={styles.paragraf}>
+                    We share Aggregate Information with our partners, service
+                    providers and other persons with whom we conduct business.
+                    We share this type of statistical data so that our partners
+                    can understand how and how often people use Digital:
+                    Minimalist To-do App and their services or websites, which
+                    facilitates improving both their services and how we
+                    interface with them. In addition, these third parties may
+                    share with us non-private, aggregated or otherwise
+                    non-Personal Information about you that they have
+                    independently developed oracquired.
+                </Text>
+                <Text style={styles.subTitle}>Email Communications:</Text>
+                <Text style={styles.paragraf}>
+                    As part of Digital: Minimalist To-do App, you may
+                    occasionally receive from us email and other communication
+                    relating to your Account. These emails will only be sent for
+                    purposes important to Digital: Minimalist To-do App, such as
+                    Account information.
+                </Text>
+                <Text style={styles.subTitle}>
+                    Information Disclosed Pursuant to Business Transfers:
+                </Text>
+                <Text style={styles.paragraf}>
+                    If we, or substantially all of our assets associated with
+                    Digital: Minimalist To-do App, were acquired, or in the
+                    unlikely event that we go out of business or enter
+                    bankruptcy, user information would be one of the assets that
+                    is transferred or acquired by a third party. You acknowledge
+                    that such transfers may occur, and that any acquirer of us
+                    may continue to use your
+                </Text>
+                <Text style={styles.subTitle}>
+                    Information Disclosed for the Protection of Us and Others:
+                </Text>
+                <Text style={styles.paragraf}>
+                    We also reserve the right to access, read, preserve, and
+                    disclose any information as it reasonably believes is
+                    necessary to (i) satisfy any applicable law, regulation,
+                    legal process or governmental request, (ii) enforce these
+                    Terms of Service, including investigation of potential
+                    violations hereof, (iii) detect, prevent, or otherwise
+                    address fraud, security or technical issues, (iv) respond to
+                    user support requests, or (v) protect our rights, property
+                    or safety, our users and the public. This includes
+                    exchanging information with other companies and
+                    organizations for fraud protection and spam prevention.
+                </Text>
+                <Text style={styles.subTitle}>
+                    Information We Share With Your Consent:
+                </Text>
+                <Text style={styles.paragraf}>
+                    Except as set forth above, you will be notified when your
+                    Personal Information may be shared with third parties, and
+                    will be able to prevent the sharing of this information.
+                </Text>
+                <Text style={styles.subTitle}>
+                    Is Information About Me Secure?
+                </Text>
+                <Text style={styles.paragraf}>
+                    Your Account information is protected for your privacy and
+                    security. We endeavor to protect Account information to
+                    ensure that it is kept private; however, we cannot guarantee
+                    the security of any Account information. Unauthorized entry
+                    or use, hardware or software failure, and other factors, may
+                    compromise the security of user information at any time. We
+                    otherwise store all of our information, including your IP
+                    address information, using industry-standard security
+                    techniques. We do not guarantee or warrant that such
+                    techniques will prevent unauthorized access to information
+                    about you we store, Personal Information or otherwise.
+                </Text>
+                <Text style={styles.subTitle}>
+                    What Happens When There Are Changes to this Privacy Policy?
+                </Text>
+                <Text style={styles.paragraf}>
+                    We may amend this Privacy Policy from time to time. Use of
+                    information we collect now is subject to the Privacy Policy
+                    in effect at the time such information is used. If we make
+                    changes in the way we collect or use information, we will
+                    notify you by posting an announcement on or within Digital:
+                    Minimalist To-do App or by sending you an email. A user is
+                    bound by any changes to the Privacy Policy when he or she
+                    uses Digital: Minimalist To-do App after such changes have
+                    been first posted.
+                </Text>
+                <Text style={styles.subTitle}>
+                    What If I Have Questions or Concerns?
+                </Text>
+                <Text style={styles.paragraf}>
+                    If you have any questions or concerns regarding privacy
+                    using Digital: Minimalist To-do App, please send us a
+                    detailed message to: hello@digitaltodoapp.com. We will make
+                    every effort to resolve your concerns.
+                </Text>
             </View>
         );
     }

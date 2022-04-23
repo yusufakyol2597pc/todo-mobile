@@ -2,6 +2,8 @@
     "login": "Giriş yap",
     "logout": "Çıkış yap",
     "signup": "Kayıt ol",
+    "passwordsNotSame": "Şifreler aynı değil!",
+    "passwordUnacceptable": "Şifre en az 8 karakterli olmalı ve en az bir büyük, bir küçük ve bir özel karakter içermelidir!",
     "createAccount": "Hesap oluştur",
     "password": "Şifre",
     "confirmPassword": "Şifreyi onayla",
@@ -36,7 +38,7 @@
     "selectLang": "Bir dil seçiniz",
     "stop": "Duraklat",
     "holdToReset": "Sıfırlamak için basılı tut",
-    "resume": "Devam Et",
+    "resume": "Devam Et",              
     "language": "Dil",
     "english": "İngilizce",
     "turkish": "Türkçe"

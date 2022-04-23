@@ -1,5 +1,5 @@
 import { signOut, updatePassword } from "firebase/auth";
-import React, { Component, useState } from "react";
+import React, { Component, useRef, useState } from "react";
 import {
     AppRegistry,
     DevSettings,
@@ -23,6 +23,9 @@ import * as Localization from "expo-localization";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Portal } from "react-native-portalize";
+import { Modalize } from "react-native-modalize";
+import Texts from "../login/Texts";
 
 const enIcon = require("../../assets/images/en.png");
 const trIcon = require("../../assets/images/tr-TR.png");
@@ -31,6 +34,8 @@ export default function ProfileScreen({
     navigation,
 }: RootTabScreenProps<"TabThree">) {
     const { t, i18n } = useTranslation();
+    const [type, setType] = useState("");
+    const modalizeRef = useRef(Modalize);
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(Localization.locale);
     const [items, setItems] = useState(getLanguages());
@@ -67,6 +72,11 @@ export default function ProfileScreen({
                 ),
             },
         ];
+    }
+
+    function openTextModal(type: any) {
+        modalizeRef.current?.open();
+        setType(type);
     }
 
     const onSubmit = (data: any) => {
@@ -183,10 +193,16 @@ export default function ProfileScreen({
 
                 <View style={styles.line} />
 
-                <MonoText style={{ marginBottom: 16, alignSelf: "flex-start" }}>
+                <MonoText
+                    style={{ marginBottom: 16, alignSelf: "flex-start" }}
+                    onPress={() => openTextModal("terms")}
+                >
                     {i18n.t("terms")}
                 </MonoText>
-                <MonoText style={{ alignSelf: "flex-start" }}>
+                <MonoText
+                    style={{ alignSelf: "flex-start" }}
+                    onPress={() => openTextModal("privacy")}
+                >
                     {i18n.t("privacy")}
                 </MonoText>
 
@@ -210,6 +226,12 @@ export default function ProfileScreen({
                 >
                     {i18n.t("logout")}
                 </MonoText>
+
+                <Portal>
+                    <Modalize ref={modalizeRef} handlePosition="inside">
+                        <Texts type={type} />
+                    </Modalize>
+                </Portal>
             </KeyboardAwareScrollView>
         </TouchableWithoutFeedback>
     );

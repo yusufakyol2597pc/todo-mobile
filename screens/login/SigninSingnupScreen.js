@@ -3,13 +3,14 @@ import { View, Text } from "../../components/Themed";
 import { Button, StyleSheet, TextInput, Pressable, ActivityIndicator, TouchableOpacity, KeyboardAvoidingView, Keyboard } from "react-native";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { login, register, signinWithGoogle } from "../../store/actions/user.actions";
+import { login, register } from "../../store/actions/user.actions";
 import { CustomizedInput } from "../../components/CustomizedInput";
 import { MonoText } from "../../components/StyledText";
 import { useTranslation } from "react-i18next";
 import { Portal } from "react-native-portalize";
 import { Modalize } from "react-native-modalize";
 import Texts from "./Texts";
+import Toast from 'react-native-toast-message';
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 function Signup(props) {
@@ -32,35 +33,56 @@ function Signup(props) {
     }
 
     const onSubmit = data => {
+        if (data.password !== data.password_confirm) {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('passwordsNotSame')
+              });
+              return;
+        }
+        var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        if (!re.test(data.password)) {
+            Toast.show({
+                type: 'error',
+                text1: i18n.t('passwordUnacceptable')
+              });
+            return;  
+        }
         dispatch(register(data))
     };   
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView style={styles.content}>
-                <MonoText style={styles.title}>Digital</MonoText>
-                <MonoText>{i18n.t('createAccount')}</MonoText>
+            <View style={styles.content}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={{alignItems: "center", backgroundColor: '#F1EADE'}}>
+                        <MonoText style={styles.title}>Digital</MonoText>
+                        <MonoText>{i18n.t('createAccount')}</MonoText>
+                    </View>
+                    
 
-                <View style={{backgroundColor: '#F1EADE', marginTop: 24}}>
-                    <MonoText style={{marginBottom: 3}}>Email</MonoText>
-                    <CustomizedInput name="email" setValue={setValue} control={control} delete={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
-                </View>
+                    <View style={{backgroundColor: '#F1EADE', marginTop: 24}}>
+                        <MonoText style={{marginBottom: 3}}>Email</MonoText>
+                        <CustomizedInput name="email" setValue={setValue} control={control} delete={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                    </View>
 
-                <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
-                    <MonoText style={{marginBottom: 3}}>{i18n.t('password')}</MonoText>
-                    <CustomizedInput name="password" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
-                </View>
+                    <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
+                        <MonoText style={{marginBottom: 3}}>{i18n.t('password')}</MonoText>
+                        <CustomizedInput name="password" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                    </View>
 
-                <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
-                    <MonoText style={{marginBottom: 3}}>{i18n.t('confirmPassword')}</MonoText>
-                    <CustomizedInput name="password-confirm" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
-                </View>
+                    <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
+                        <MonoText style={{marginBottom: 3}}>{i18n.t('confirmPassword')}</MonoText>
+                        <CustomizedInput name="password_confirm" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                    </View>
+                </TouchableWithoutFeedback>
 
                 <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
                     <MonoText style={{color: "white", fontSize: 18}}>{i18n.t('signup')}</MonoText>
                 </TouchableOpacity>
 
                 <MonoText style={{marginVertical: 24, textDecorationLine: 'underline'}} onPress={props.setHaveAccount}>{i18n.t('alreadyHave')}</MonoText>
-            </KeyboardAvoidingView>
+            </View>
+            
 
             <MonoText style={{fontSize: 12, color: "#C2B192", marginBottom: 22}} onPress={() => openTextModal("terms")}>{i18n.t('terms')}</MonoText>
 
@@ -100,24 +122,27 @@ function Signin(props) {
     }
 
     return (
-        <TouchableWithoutFeedback style={{flex:1, height: "100%"}} onPress={Keyboard.dismiss}>
         <View style={styles.container}>
             <View style={styles.content} >
-                <MonoText style={styles.title}>Digital</MonoText>
-                <MonoText>{i18n.t('login')}</MonoText>
-                
-                <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
-                    <MonoText style={{marginBottom: 3}}>Email</MonoText>
-                    <CustomizedInput name="email" setValue={setValue} control={control} delete={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
-                </View>
-                
-                {errors.email && <Text style={styles.errorText}>Email is required.</Text>}
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={{alignItems: "center", backgroundColor: '#F1EADE'}}>
+                        <MonoText style={styles.title}>Digital</MonoText>
+                        <MonoText>{i18n.t('login')}</MonoText>
+                    </View>
 
-                <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
-                    <MonoText style={{marginBottom: 3}}>{i18n.t('password')}</MonoText>
-                    <CustomizedInput name="password" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
-                </View>
-                {errors.password && <Text style={styles.errorText}>Password is required.</Text>}
+                    <View style={{backgroundColor: '#F1EADE', marginVertical: 24}}>
+                        <MonoText style={{marginBottom: 3}}>Email</MonoText>
+                        <CustomizedInput name="email" setValue={setValue} control={control} delete={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                    </View>
+                    
+                    {errors.email && <Text style={styles.errorText}>Email is required.</Text>}
+
+                    <View style={{backgroundColor: '#F1EADE', marginBottom: 16}}>
+                        <MonoText style={{marginBottom: 3}}>{i18n.t('password')}</MonoText>
+                        <CustomizedInput name="password" setValue={setValue} control={control} delete={true} toggleSecureText={true} borderColor="#DFD4C0" bgColor="#F0E7D6"/>
+                    </View>
+                    {errors.password && <Text style={styles.errorText}>Password is required.</Text>}
+                </TouchableWithoutFeedback>
 
                 <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
                     <MonoText style={{color: "white", fontSize: 18}}>{i18n.t('login')}</MonoText>
@@ -143,7 +168,6 @@ function Signin(props) {
                 </Modalize>
             </Portal>
         </View>
-        </TouchableWithoutFeedback>
     )
 }
 

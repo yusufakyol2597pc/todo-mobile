@@ -132,9 +132,18 @@ function TodoItem(props: any) {
                 date
             );
         }
-        todo.save();
-        setTodoTitleBackup(todoTitle);
-        setCreate(false);
+        todo.save()
+            .then(() => {
+                setTodoTitleBackup(todoTitle);
+                setCreate(false);
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                Toast.show({
+                    type: "error",
+                    text1: errorMessage,
+                });
+            });
 
         if (date) {
             date.setHours(0, 0, 0, 0);
@@ -169,7 +178,10 @@ function TodoItem(props: any) {
         updateDoc(props.docRef, {
             title: todoTitle,
         })
-            .then(() => {})
+            .then(() => {
+                props.setEditFunc(false);
+                setTodoTitleBackup(todoTitle);
+            })
             .catch((error) => {
                 const errorMessage = error.message;
                 Toast.show({
@@ -177,8 +189,6 @@ function TodoItem(props: any) {
                     text1: errorMessage,
                 });
             });
-        props.setEditFunc(false);
-        setTodoTitleBackup(todoTitle);
     }
 
     return (

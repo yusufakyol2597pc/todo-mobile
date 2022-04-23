@@ -11,6 +11,7 @@ import Toast from "react-native-toast-message";
 import ConfirmDialog from "./shared-components/ConfirmDialog";
 import { Host, Portal } from "react-native-portalize";
 import "./i18n";
+import { toastConfig } from "./toastConfig";
 
 export default function App() {
     const isLoadingComplete = useCachedResources();
@@ -28,7 +29,7 @@ export default function App() {
                         <ConfirmDialog />
                     </Host>
                 </Provider>
-                <Toast />
+                <Toast config={toastConfig} />
             </SafeAreaProvider>
         );
     }

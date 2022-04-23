@@ -57,61 +57,60 @@ export default function Timer() {
                     {({ remainingTime }) => {
                         if (isPlaying === false) {
                             return (
-                                <View style={{ alignItems: "center" }}>
-                                    <TouchableOpacity
-                                        onPress={() => setIsPlaying(true)}
-                                        onLongPress={() => {
-                                            setPhase(0);
-                                            setDuration(focusTime);
-                                            setRemTime(focusTime);
-                                            setIsPlaying(undefined);
-                                            setKey((prevKey) => prevKey + 1);
+                                <TouchableOpacity
+                                    onPress={() => setIsPlaying(true)}
+                                    style={styles.timerButton}
+                                    onLongPress={() => {
+                                        setPhase(0);
+                                        setDuration(focusTime);
+                                        setRemTime(focusTime);
+                                        setIsPlaying(undefined);
+                                        setKey((prevKey) => prevKey + 1);
+                                    }}
+                                >
+                                    <MonoText
+                                        style={{
+                                            fontSize: 18,
+                                            color: "#38383A",
+                                            fontWeight: "400",
                                         }}
                                     >
-                                        <MonoText
-                                            style={{
-                                                fontSize: 18,
-                                                color: "#38383A",
-                                                fontWeight: "400",
-                                            }}
-                                        >
-                                            {i18n.t("resume")}
-                                        </MonoText>
-                                    </TouchableOpacity>
-                                </View>
+                                        {i18n.t("resume")}
+                                    </MonoText>
+                                </TouchableOpacity>
                             );
                         }
                         if (isPlaying === true) {
                             setRemTime(remainingTime);
                             return (
-                                <View style={{ alignItems: "center" }}>
-                                    <TouchableOpacity
-                                        onPress={() => setIsPlaying(false)}
-                                        onLongPress={() => {
-                                            setPhase(0);
-                                            setDuration(focusTime);
-                                            setRemTime(focusTime);
-                                            setIsPlaying(undefined);
-                                            setKey((prevKey) => prevKey + 1);
+                                <TouchableOpacity
+                                    style={styles.timerButton}
+                                    onPress={() => setIsPlaying(false)}
+                                    onLongPress={() => {
+                                        setPhase(0);
+                                        setDuration(focusTime);
+                                        setRemTime(focusTime);
+                                        setIsPlaying(undefined);
+                                        setKey((prevKey) => prevKey + 1);
+                                    }}
+                                >
+                                    <MonoText
+                                        style={{
+                                            fontSize: 18,
+                                            color: "#38383A",
+                                            fontWeight: "400",
                                         }}
                                     >
-                                        <MonoText
-                                            style={{
-                                                fontSize: 18,
-                                                color: "#38383A",
-                                                fontWeight: "400",
-                                            }}
-                                        >
-                                            {i18n.t("stop")}
-                                        </MonoText>
-                                    </TouchableOpacity>
-                                </View>
+                                        {i18n.t("stop")}
+                                    </MonoText>
+                                </TouchableOpacity>
                             );
                         }
                         if (phase == 0) {
                             setRemTime(remainingTime);
                             return (
                                 <TouchableOpacity
+                                    style={styles.timerButton}
                                     onPress={() => {
                                         setDuration(focusTime);
                                         setPhase(1);
@@ -176,5 +175,12 @@ const styles = StyleSheet.create({
         marginVertical: 30,
         height: 1,
         width: "80%",
+    },
+    timerButton: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        alignItems: "center",
+        justifyContent: "center",
     },
 });

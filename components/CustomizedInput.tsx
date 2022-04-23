@@ -1,5 +1,5 @@
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, TextInput } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "./Themed";
 import { SvgXml } from "react-native-svg";
