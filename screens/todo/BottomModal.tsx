@@ -21,7 +21,15 @@ import {
     moveTodayIcon,
     moveToNextIcon,
 } from "./SvgIcons";
-import { deleteDoc, updateDoc } from "firebase/firestore";
+import {
+    collection,
+    deleteDoc,
+    getDocs,
+    orderBy,
+    query,
+    updateDoc,
+    where,
+} from "firebase/firestore";
 import { TodoStatus } from "../../store/enums/todoStatus";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -31,6 +39,7 @@ import { useEffect, useState } from "react";
 import { TodoType } from "../../store/enums/todoType";
 import { Modalize } from "react-native-modalize";
 import { TodoDay } from "../../store/enums/todoDay";
+import { auth, db } from "../../firebase";
 
 export default function BottomModal(props: any) {
     const { t, i18n } = useTranslation();
@@ -40,6 +49,30 @@ export default function BottomModal(props: any) {
     useEffect(() => {
         setIsMove(false);
     }, []);
+
+    function orderByIndex(a, b) {
+        if (a.data && b.data) {
+            var keyA = a.data().index,
+                keyB = b.data().index;
+            // Compare the 2 dates
+            if (keyA < keyB) return -1;
+            if (keyA > keyB) return 1;
+        }
+
+        return 0;
+    }
+
+    function getFirstIndex(todoList) {
+        let todoIndex = 0;
+        for (let index = 0; index < todoList.length; index++) {
+            const todo = todoList[index];
+            if (todo.data && todo.data().index !== undefined) {
+                todoIndex = todo.data().index;
+                break;
+            }
+        }
+        return todoIndex;
+    }
 
     async function updateDocument(status: TodoStatus) {
         if (!props.docRef || !status) {
@@ -82,15 +115,39 @@ export default function BottomModal(props: any) {
             });
     }
 
-    function moveToday() {
+    async function moveToday() {
         if (!props.docRef) {
             return;
         }
         props.modalizeRef.current?.close();
         var date = new Date();
+
+        const beginningOfTheDay = new Date();
+        const endOfTheDay = new Date();
+
+        beginningOfTheDay.setHours(0, 0, 0, 0);
+        endOfTheDay.setHours(23, 59, 59, 99);
+
+        var q = query(
+            collection(db, "todo"),
+            where("type", "==", TodoType.DAILY),
+            where("userId", "==", auth.currentUser?.uid),
+            where("date", ">=", beginningOfTheDay),
+            where("date", "<=", endOfTheDay)
+        );
+
+        const querySnapshot = await getDocs(q);
+        let todoList = [];
+        querySnapshot.forEach((doc) => {
+            todoList.push(doc);
+        });
+        todoList.sort(orderByIndex);
+        const index = getFirstIndex(todoList) - 1;
+
         updateDoc(props.docRef, {
             type: TodoType.DAILY,
             date: date,
+            index: index,
         })
             .then(() => {})
             .catch((error) => {
@@ -102,16 +159,41 @@ export default function BottomModal(props: any) {
             });
     }
 
-    function moveToNextDay() {
+    async function moveToNextDay() {
         if (!props.docRef) {
             return;
         }
         props.modalizeRef.current?.close();
+        const beginningOfTheDay = new Date();
+        beginningOfTheDay.setDate(beginningOfTheDay.getDate() + 1);
+        const endOfTheDay = new Date();
+        endOfTheDay.setDate(beginningOfTheDay.getDate() + 1);
+
+        beginningOfTheDay.setHours(0, 0, 0, 0);
+        endOfTheDay.setHours(23, 59, 59, 99);
+
+        var q = query(
+            collection(db, "todo"),
+            where("type", "==", TodoType.DAILY),
+            where("userId", "==", auth.currentUser?.uid),
+            where("date", ">=", beginningOfTheDay),
+            where("date", "<=", endOfTheDay)
+        );
+
+        const querySnapshot = await getDocs(q);
+        let todoList = [];
+        querySnapshot.forEach((doc) => {
+            todoList.push(doc);
+        });
+        todoList.sort(orderByIndex);
+        const index = getFirstIndex(todoList) - 1;
+
         var date = new Date();
         date.setDate(date.getDate() + 1);
         updateDoc(props.docRef, {
             type: TodoType.DAILY,
             date: date,
+            index: index,
         })
             .then(() => {})
             .catch((error) => {
@@ -123,13 +205,29 @@ export default function BottomModal(props: any) {
             });
     }
 
-    function moveToSomeDay() {
+    async function moveToSomeDay() {
         if (!props.docRef) {
             return;
         }
         props.modalizeRef.current?.close();
+
+        var q = query(
+            collection(db, "todo"),
+            where("type", "==", TodoType.SOME_DAY),
+            where("userId", "==", auth.currentUser?.uid)
+        );
+
+        const querySnapshot = await getDocs(q);
+        let todoList = [];
+        querySnapshot.forEach((doc) => {
+            todoList.push(doc);
+        });
+        todoList.sort(orderByIndex);
+        const index = getFirstIndex(todoList) - 1;
+
         updateDoc(props.docRef, {
             type: TodoType.SOME_DAY,
+            index: index,
         })
             .then(() => {})
             .catch((error) => {
@@ -144,7 +242,7 @@ export default function BottomModal(props: any) {
     if (isMove) {
         return (
             <Modalize
-                modalHeight={240}
+                modalHeight={props.day === TodoDay.PREVIOUS ? 300 : 240}
                 ref={props.modalizeRef}
                 handlePosition="inside"
                 onClosed={() => {
@@ -153,7 +251,8 @@ export default function BottomModal(props: any) {
             >
                 <View style={styles.container}>
                     {(props.day === TodoDay.NEXT_DAY ||
-                        props.day === TodoDay.SOME_DAY) && (
+                        props.day === TodoDay.SOME_DAY ||
+                        props.day === TodoDay.PREVIOUS) && (
                         <TouchableOpacity
                             style={styles.todoItemContainer}
                             onPress={() => moveToday()}
@@ -214,7 +313,7 @@ export default function BottomModal(props: any) {
 
     return (
         <Modalize
-            modalHeight={props.day === TodoDay.PREVIOUS ? 420 : 490}
+            modalHeight={490}
             ref={props.modalizeRef}
             handlePosition="inside"
             onClosed={() => {
@@ -286,17 +385,13 @@ export default function BottomModal(props: any) {
                     <MonoText style={styles.title}>{i18n.t("edit")}</MonoText>
                 </TouchableOpacity>
 
-                {props.day !== TodoDay.PREVIOUS && (
-                    <TouchableOpacity
-                        style={styles.todoItemContainer}
-                        onPress={() => deleteTodo()}
-                    >
-                        <SvgXml style={{ marginRight: 16 }} xml={cancelIcon} />
-                        <MonoText style={styles.title}>
-                            {i18n.t("delete")}
-                        </MonoText>
-                    </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                    style={styles.todoItemContainer}
+                    onPress={() => deleteTodo()}
+                >
+                    <SvgXml style={{ marginRight: 16 }} xml={cancelIcon} />
+                    <MonoText style={styles.title}>{i18n.t("delete")}</MonoText>
+                </TouchableOpacity>
             </View>
         </Modalize>
     );

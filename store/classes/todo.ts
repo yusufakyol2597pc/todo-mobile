@@ -11,12 +11,14 @@ export class Todo {
     status: TodoStatus;
     type: TodoType;
     date: Date;
+    index: number;
 
-    constructor(title: string, status: TodoStatus = TodoStatus.NOT_STARTED, type: TodoType = TodoType.DAILY, date: Date = new Date()) {
+    constructor(title: string, status: TodoStatus = TodoStatus.NOT_STARTED, type: TodoType = TodoType.DAILY, date: Date = new Date(), index: number = 0) {
         this.title = title;
         this.status = status;
         this.type = type;
         this.date = date;
+        this.index = index;
     }
 
     async save() {
@@ -27,6 +29,7 @@ export class Todo {
             type: this.type,
             date: this.date,
             userId: auth.currentUser?.uid,
+            index: this.index
         })
     }
 }

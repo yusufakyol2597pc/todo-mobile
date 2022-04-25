@@ -45,6 +45,22 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { ScrollView } from "react-native-gesture-handler";
 import { TodoDay } from "../../store/enums/todoDay";
 
+function getLastIndex(todoList): number {
+    let index = 0;
+    if (todoList.length == 0) {
+        return index;
+    }
+    for (let i = 0; i < todoList.length; i++) {
+        if (todoList[i].tapToCreate) {
+            return index;
+        }
+        if (todoList[i].data && todoList[i].data().index) {
+            index = todoList[i].data().index;
+        }
+    }
+    return index;
+}
+
 function TodoItem(props: any) {
     const { t, i18n } = useTranslation();
     const [create, setCreate] = useState(false);
@@ -97,18 +113,21 @@ function TodoItem(props: any) {
     }
 
     function createTodo() {
-        if (todoTitle === "") {
+        let trimedTitle = todoTitle.trim();
+        if (trimedTitle === "") {
             setCreate(false);
+            setTodoTitle("");
             return;
         }
         var date;
         var todo;
         if (props.type === TodoType.SOME_DAY) {
             todo = new Todo(
-                todoTitle,
+                trimedTitle,
                 TodoStatus.NOT_STARTED,
                 TodoType.SOME_DAY,
-                new Date()
+                new Date(),
+                getLastIndex(props.todoList) + 1
             );
         } else if (props.type === TodoType.DAILY) {
             if (props.isToday) {
@@ -118,23 +137,25 @@ function TodoItem(props: any) {
                 date.setDate(date.getDate() + 1);
             }
             todo = new Todo(
-                todoTitle,
+                trimedTitle,
                 TodoStatus.NOT_STARTED,
                 TodoType.DAILY,
-                date
+                date,
+                getLastIndex(props.todoList) + 1
             );
         } else {
             date = props.date.toDate();
             todo = new Todo(
-                todoTitle,
+                trimedTitle,
                 TodoStatus.NOT_STARTED,
                 TodoType.DAILY,
-                date
+                date,
+                getLastIndex(props.todoList) + 1
             );
         }
         todo.save()
             .then(() => {
-                setTodoTitleBackup(todoTitle);
+                setTodoTitleBackup(trimedTitle);
                 setCreate(false);
             })
             .catch((error) => {
@@ -170,17 +191,18 @@ function TodoItem(props: any) {
     }
 
     function editTodo() {
-        if (todoTitle.length === 0 || todoTitleBackup === todoTitle) {
+        let trimedTitle = todoTitle.trim();
+        if (trimedTitle.length === 0 || todoTitleBackup === trimedTitle) {
             props.setEditFunc(false);
             setTodoTitle(todoTitleBackup);
             return;
         }
         updateDoc(props.docRef, {
-            title: todoTitle,
+            title: trimedTitle,
         })
             .then(() => {
                 props.setEditFunc(false);
-                setTodoTitleBackup(todoTitle);
+                setTodoTitleBackup(trimedTitle);
             })
             .catch((error) => {
                 const errorMessage = error.message;
@@ -220,6 +242,7 @@ function TodoItem(props: any) {
                     style={{
                         fontSize: 18,
                         backgroundColor: props.bgColor,
+                        width: "85%",
                     }}
                     onPress={() => {
                         props.setEditFunc(true);
@@ -237,6 +260,8 @@ function TodoItem(props: any) {
                         onChangeText={(value) => {
                             if (value.length < 30) {
                                 setTodoTitle(value);
+                            } else {
+                                setTodoTitle(value.substring(0, 29));
                             }
                         }}
                         onEndEditing={() => createTodo()}
@@ -266,6 +291,8 @@ function TodoItem(props: any) {
                     onChangeText={(value) => {
                         if (value.length < 30) {
                             setTodoTitle(value);
+                        } else {
+                            setTodoTitle(value.substring(0, 29));
                         }
                     }}
                     onEndEditing={() => editTodo()}
@@ -307,7 +334,7 @@ export default function Todos(props: any) {
         },
     });
 
-    function setDailyTodos() {
+    async function setDailyTodos() {
         setDay(TodoDay.TODAY);
         if (!props.date.isToday) {
             setBgColor("#F1EADE");
@@ -340,6 +367,7 @@ export default function Todos(props: any) {
                     todoList.push({});
                 }
             }
+            todoList.sort(orderByIndex);
             setTodos(todoList);
         });
 
@@ -365,11 +393,11 @@ export default function Todos(props: any) {
             });
             const length = 10 - todoList.length;
             if (length > 0) {
-                todoList.push({ tapToCreate: true });
-                for (let index = 0; index < length - 1; index++) {
+                for (let index = 0; index < length; index++) {
                     todoList.push({});
                 }
             }
+            todoList.sort(orderByIndex);
             setTodos(todoList);
         });
 
@@ -397,6 +425,7 @@ export default function Todos(props: any) {
                     todoList.push({});
                 }
             }
+            todoList.sort(orderByIndex);
             setTodos(todoList);
         });
 
@@ -447,6 +476,18 @@ export default function Todos(props: any) {
         setSelectedId(id);
     };
 
+    function orderByIndex(a, b) {
+        if (a.data && b.data) {
+            var keyA = a.data().index,
+                keyB = b.data().index;
+            // Compare the 2 dates
+            if (keyA < keyB) return -1;
+            if (keyA > keyB) return 1;
+        }
+
+        return 0;
+    }
+
     return (
         <View style={{ ...styles.container, backgroundColor: bgColor }}>
             <View
@@ -484,6 +525,7 @@ export default function Todos(props: any) {
                                     tapToCreate={todo.tapToCreate}
                                     todo={todo.data ? todo.data() : {}}
                                     index={index}
+                                    todoList={todos}
                                     id={todo.id}
                                     bgColor={bgColor}
                                     lineColor={lineColor}
